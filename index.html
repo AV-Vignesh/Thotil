@@ -196,6 +196,19 @@ ul.b{padding-left:20px} ul.b li+li{margin-top:5px}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{text-align:center;padding:28px 10px;color:var(--muted)}
 .empty .qi{font-size:40px;display:block;margin-bottom:6px}
+.microw{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+.mic{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border-radius:999px;padding:10px 16px;font-weight:700;min-height:44px}
+.mic.rec{background:var(--lotus);color:#fff}
+@media (prefers-reduced-motion:no-preference){.mic.rec{animation:blink 1.2s ease-in-out infinite}}
+@keyframes blink{50%{opacity:.7}}
+.ai{margin-top:12px;padding:10px 12px;border-left:3px solid var(--plum);background:var(--surface2);border-radius:0 12px 12px 0}
+.ai ul{padding-left:18px;margin-top:4px;font-size:14px}
+pre.log{white-space:pre-wrap;word-break:break-word;font-size:12px;line-height:1.45;background:var(--surface2);padding:10px;border-radius:12px;max-height:300px;overflow:auto;margin-top:10px}
+details.dg{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+details.dg>summary{cursor:pointer;font-weight:700;list-style:none}
+details.dg>summary::-webkit-details-marker{display:none}
+.status{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:var(--line)}
+.status.ok{background:var(--leaf)}.status.no{background:var(--lotus)}
 </style>
 </head>
 <body>
@@ -356,7 +369,7 @@ const TASKS=[
  ["t_ogtt","m6","Glucose tolerance test (OGTT)","24–28 weeks. Gestational diabetes is common in South Asian women — don’t skip it.",24,28,"med"],
  ["t_hb2","m6","Repeat Hb / CBC","Anaemia is very common in Indian pregnancies and easy to fix if caught.",24,28,"med"],
  ["t_class","m6","Book childbirth and breastfeeding classes","Most big hospitals run them. Both of you should attend.",22,28,"self"],
- ["t_buys","m6","Plan big purchases","Cot, firm mattress, car seat, pram, and clothes for 0–3 months only — babies outgrow them fast.",24,32,"home"],
+ ["t_buys","m6","Plan big purchases","Use More → Things to buy. Buy clothes for 0–3 months only — babies outgrow them fast.",24,32,"home"],
  ["t_kicks","m7","Start daily kick counting","From 28 weeks — use the kick counter under More. Reduced movement means calling the doctor the same day.",28,40,"med"],
  ["t_tdap","m7","Ask about Tdap and flu vaccines","Tdap at 27–36 weeks protects the newborn from whooping cough. Widely given privately.",27,32,"med"],
  ["t_growth","m7","Growth scan / Doppler (if advised)","Usually 28–34 weeks.",28,34,"scan"],
@@ -394,6 +407,65 @@ const VAX=[
  {k:"v16m",age:"16–24 months",mo:16,list:"MR-2, DPT booster-1, OPV booster, Vitamin A (2nd), JE-2 in endemic districts"},
  {k:"v5y",age:"5–6 years",mo:60,list:"DPT booster-2"}
 ];
+/* ---- Things to buy: [group, item, why, tag(must|nice|later|skip), buy-by week] ---- */
+const BUY=[
+ ["Sleep","Cot or crib","Bars no more than 6 cm apart, no cut-outs a head can slip through, stable on the floor. A cot that converts to a toddler bed lasts longer.","must",34],
+ ["Sleep","Firm, flat cot mattress","Must fit snugly — no gap wider than two fingers at the edges. Firm, not soft foam.","must",34],
+ ["Sleep","3–4 fitted cot sheets","Fitted only. Loose sheets are a suffocation risk.","must",34],
+ ["Sleep","Mosquito net for the cot","Chennai essential. Use a net, not plug-in repellents near a newborn unless the paediatrician agrees.","must",34],
+ ["Sleep","Swaddles or wearable sleep sacks (3–4)","Thin cotton for Chennai heat. Stop swaddling once baby starts trying to roll.","must",34],
+ ["Sleep","Bassinet or bedside crib","Handy for the first 4–5 months in your room. Optional if the cot fits beside your bed.","nice",34],
+ ["Sleep","Traditional cloth thottil / hanging cradle","Lovely for awake, watched time. For sleep, a flat firm surface is safer — a sling cradle lets the chin curl to the chest and can restrict breathing.","nice",36],
+ ["Travel","Rear-facing infant car seat","Needed from the drive home. Check ECE R44 or R129 (i-Size) certification and whether your car has ISOFIX. Install and practise before week 36. Never in front of an airbag.","must",34],
+ ["Travel","Diaper bag","Any big bag with pockets works; a dedicated one isn’t essential.","nice",36],
+ ["Travel","Ergonomic baby carrier","Look for an “M” hip position (knees above bottom). Great for errands and fussy evenings.","nice",38],
+ ["Travel","Pram / stroller","Chennai footpaths are hard on prams. Useful in malls and parks; can wait until you know you’ll use it.","later",40],
+ ["Feeding","Burp cloths / muslin squares (6–8)","You will use more than you think.","must",36],
+ ["Feeding","Nursing pillow","Saves her back during long feeds. A firm regular pillow can do the job.","nice",36],
+ ["Feeding","Nipple cream (lanolin)","Early-days soreness is common. Persistent pain means a latch check, not just more cream.","must",36],
+ ["Feeding","Breast pump","Wait — buy only if needed (returning to work, supply issues). Hospitals can advise or rent one.","later",40],
+ ["Feeding","2 bottles + bottle brush","Only if you plan to give expressed milk. Don’t stock up on formula unless advised.","later",40],
+ ["Feeding","Steriliser","Boiling in a vessel for 5 minutes works fine.","skip",0],
+ ["Diapering","Newborn diapers (1–2 packs only)","Babies outgrow the newborn size in weeks. Buy the next size later.","must",36],
+ ["Diapering","Cloth nappies / langots (10–12)","Cheap, breathable, good for nappy-free time in the heat.","must",36],
+ ["Diapering","Waterproof under-sheets (mackintosh) (3–4)","Under the baby on the bed, on laps, everywhere.","must",36],
+ ["Diapering","Wipes (water-based) or cotton + warm water","Plain water and cotton is gentlest for the first weeks.","must",36],
+ ["Diapering","Zinc-oxide nappy rash cream","Thin layer at each change if skin is red.","must",36],
+ ["Diapering","Changing mat","Any padded mat on a bed or floor. A changing table is optional.","nice",36],
+ ["Bath & care","Digital thermometer","For baby, armpit readings. Fever of 38°C or more in a baby under 3 months needs a doctor the same day.","must",34],
+ ["Bath & care","Baby nail clipper or file","Newborn nails are sharp and grow fast.","must",36],
+ ["Bath & care","Soft hooded towels (2–3)","","must",36],
+ ["Bath & care","Mild, fragrance-free baby wash","Plain water is enough for the first few weeks.","nice",38],
+ ["Bath & care","Baby bath tub","A large basin works; a tub is easier for one person.","nice",38],
+ ["Bath & care","Saline nose drops","Only as the paediatrician advises, for blocked noses.","nice",40],
+ ["Clothes","6–8 soft cotton jablas / onesies","Mix of newborn and 0–3 months. Front-opening is easiest.","must",34],
+ ["Clothes","Caps, mittens, socks (4–5 each)","Light ones. Don’t overdress in Chennai heat — one layer more than an adult.","must",34],
+ ["Clothes","Light cotton blanket (2)","For AC rooms and outings, not loose in the cot.","must",34],
+ ["Mother","Nursing bras (2–3)","Get measured around 36 weeks.","must",36],
+ ["Mother","Front-opening nighties and feeding tops","","must",34],
+ ["Mother","Maternity pads (2–3 packs)","Bleeding lasts up to 6 weeks.","must",36],
+ ["Mother","Comfortable chair for night feeds","Back and arm support matter more than looks.","nice",36],
+ ["Later (4–12 months)","Play mat and a few toys","High-contrast pictures and a rattle are plenty early on.","later",48],
+ ["Later (4–12 months)","Baby-proofing: socket covers, corner guards, gate","Before crawling, around 6 months.","later",60],
+ ["Later (4–12 months)","High chair, steel/silicone bowls and spoons","Solids start around 6 months.","later",62],
+ ["Later (4–12 months)","Teethers","Solid silicone, chilled not frozen.","later",56],
+ ["Skip","Baby walker","IAP strongly advises against — walkers cause falls and head injuries and don’t help walking.","skip",0],
+ ["Skip","Cot bumpers, pillows, sleep positioners","Suffocation risk. Nothing soft in the cot.","skip",0],
+ ["Skip","Mustard-seed (rai) pillow","No proven benefit for head shape, and pillows are unsafe for sleeping babies.","skip",0],
+ ["Skip","Talcum powder","Can be inhaled into the lungs.","skip",0],
+ ["Skip","Kajal / kohl / surma","Many contain lead; IAP advises against putting anything in a baby’s eyes.","skip",0],
+ ["Skip","Shoes before walking","Socks are enough.","skip",0],
+ ["Skip","Wipe warmers, bottle-prep machines, smart gadgets","Nice-to-sell, not nice-to-have.","skip",0]
+];
+const BUYTAG={must:"Must have",nice:"Nice to have",later:"Can wait",skip:"Skip"};
+const BOND=[
+ ["b_talk","Talk to the bump every evening","Dad especially — lower voices carry well through the belly. By birth your baby will recognise both voices.",18],
+ ["b_read","Read one story aloud a day","Any book, any language. It’s the rhythm of your voices that matters.",20],
+ ["b_lull","Choose a family lullaby","Sing the same one in pregnancy and after birth — familiar sounds settle newborns.",22],
+ ["b_rec","Record your voices","A short voice memo of each of you singing or talking, for the days someone has to be away.",24],
+ ["b_play","Build a calm playlist","Soft songs you both love. Note them below so they’re ready for night feeds.",24],
+ ["b_quiet","Plan around loud places","Concerts, construction, and firecracker nights (Diwali) — keep a distance.",20]
+];
 const BAG={
  "Documents":["Aadhaar (both)","Insurance card + policy number","MCP card and all reports","PICME / RCH number","Doctor’s and hospital numbers on paper"],
  "For her":["3–4 front-opening nighties","Maternity pads (2 packs)","Disposable underwear","2 nursing bras","Slippers","Toiletries, lip balm, hair ties","Shawl or dupatta","Water bottle with straw","Snacks","Long phone-charging cable"],
@@ -406,7 +478,7 @@ const PROMPTS=["What made you smile today?","What are you craving, and what can�
 
 /* ================= STATE ================= */
 const KEY="thottil.v1";
-const DEF={profile:{},tasks:{},custom:[],journal:[],weights:[],bp:[],appts:[],meds:{list:["Folic acid","Iron","Calcium"],log:{}},kicks:[],kickLive:null,contr:[],bag:{},vax:{},lastBackup:null};
+const DEF={profile:{},tasks:{},custom:[],journal:[],weights:[],bp:[],appts:[],meds:{list:["Folic acid","Iron","Calcium"],log:{}},kicks:[],kickLive:null,contr:[],bag:{},vax:{},buy:{},buyCustom:[],buyF:"must",bond:{},songs:[],digests:[],lastBackup:null};
 const clone=o=>JSON.parse(JSON.stringify(o));
 let S=load();
 function load(){try{const r=localStorage.getItem(KEY);return r?Object.assign(clone(DEF),JSON.parse(r)):clone(DEF)}catch(e){return clone(DEF)}}
@@ -453,8 +525,200 @@ function status(t){
 }
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("show"),2600)}
 function openSheet(html){$("#panel").innerHTML='<div class="grab"></div>'+html;$("#sheet").classList.add("open");document.body.style.overflow="hidden"}
-function closeSheet(){$("#sheet").classList.remove("open");document.body.style.overflow="";U.draft=null}
+function closeSheet(){stopMic(true);$("#sheet").classList.remove("open");document.body.style.overflow="";U.draft=null}
 function val(id){const e=document.getElementById(id);return e?e.value.trim():""}
+
+/* ================= AI & VOICE ================= */
+// Stored separately from journal data so the API key is never in exported backups.
+const AIKEY="thottil.ai";
+const AIDEF={style:"v1",endpoint:"",key:"",chat:"",chatVer:"2024-10-21",voice:"device",stt:"",sttVer:"2024-10-21",lang:"en-IN",auto:true,pin:""};
+let AI=loadAI();
+function loadAI(){try{return Object.assign({},AIDEF,JSON.parse(localStorage.getItem(AIKEY)||"{}"))}catch(e){return Object.assign({},AIDEF)}}
+function saveAI(){try{localStorage.setItem(AIKEY,JSON.stringify(AI))}catch(e){toast("Couldn’t save settings")}}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const canRecord=!!(navigator.mediaDevices&&window.MediaRecorder);
+const aiReady=()=>!!(AI.endpoint&&AI.key&&AI.chat);
+const sttReady=()=>!!(AI.endpoint&&AI.key&&AI.stt&&canRecord);
+const voiceEngine=()=>AI.voice==="azure"&&sttReady()?"azure":SR?"device":(sttReady()?"azure":null);
+const host=()=>AI.endpoint.replace(/\/+$/,"");
+function chatURL(){return AI.style==="v1"?`${host()}/openai/v1/chat/completions`:`${host()}/openai/deployments/${encodeURIComponent(AI.chat)}/chat/completions?api-version=${encodeURIComponent(AI.chatVer)}`}
+function sttURL(){return AI.style==="v1"?`${host()}/openai/v1/audio/transcriptions`:`${host()}/openai/deployments/${encodeURIComponent(AI.stt)}/audio/transcriptions?api-version=${encodeURIComponent(AI.sttVer)}`}
+function explain(status,body){
+  let msg="";try{const j=JSON.parse(body);msg=(j.error&&(j.error.message||j.error.code))||j.message||""}catch(e){msg=body.slice(0,200)}
+  const hint={401:"Key rejected. Copy Key 1 from Azure portal → your resource → Keys and Endpoint.",403:"Access denied — check network restrictions on the Azure resource.",404:"Not found. Check the deployment name, API style and api-version.",429:"Rate limited or quota hit. Wait a minute or raise the deployment’s TPM.",400:"Request rejected."}[status]||`HTTP ${status}.`;
+  return `${hint}${msg?" Azure says: "+msg:""}`;
+}
+async function azureFetch(url,opts){
+  let r;
+  try{r=await fetch(url,opts)}catch(e){throw new Error("Couldn’t reach Azure. Check the endpoint, your internet, and that the resource allows public network access (browser calls can also be blocked by CORS).")}
+  const txt=await r.text();
+  if(!r.ok)throw new Error(explain(r.status,txt));
+  try{return JSON.parse(txt)}catch(e){return {text:txt}}
+}
+async function aiChat(messages){
+  if(!aiReady())throw new Error("AI isn’t set up. Go to More → AI & voice.");
+  const body={messages};if(AI.style==="v1")body.model=AI.chat;
+  const d=await azureFetch(chatURL(),{method:"POST",headers:{"Content-Type":"application/json","api-key":AI.key},body:JSON.stringify(body)});
+  const c=d.choices&&d.choices[0];
+  if(c&&c.finish_reason==="content_filter")throw new Error("Azure’s content filter blocked this. Try rewording, or adjust the filter on the deployment.");
+  return {text:(c&&c.message&&c.message.content)||"",model:d.model||AI.chat,usage:d.usage};
+}
+async function transcribe(blob){
+  const ext=/mp4|m4a|aac/.test(blob.type)?"mp4":/ogg/.test(blob.type)?"ogg":/wav/.test(blob.type)?"wav":"webm";
+  const fd=new FormData();fd.append("file",blob,`voice.${ext}`);
+  if(AI.style==="v1")fd.append("model",AI.stt);
+  if(AI.lang!=="auto")fd.append("language",AI.lang.slice(0,2));
+  const d=await azureFetch(sttURL(),{method:"POST",headers:{"api-key":AI.key},body:fd});
+  return (d.text||"").trim();
+}
+function parseJSON(t){
+  const c=String(t).replace(/```json|```/g,"").trim();const a=c.indexOf("{"),b=c.lastIndexOf("}");
+  try{return JSON.parse(a>=0?c.slice(a,b+1):c)}catch(e){return {summary:c}}
+}
+const arr=(x,n=8)=>Array.isArray(x)?x.map(v=>String(v).trim()).filter(Boolean).slice(0,n):[];
+const SYS_ENTRY=()=>`You help an expecting couple in Chennai, India keep a pregnancy journal. Entries may be English, Tamil or a mix, and may come from voice dictation with recognition errors — infer the intended words sensibly.
+Return ONLY a JSON object, no markdown:
+{"summary":"2–3 sentences in English, warm and plain, faithful to the entry. Add no facts that aren’t there.",
+"symptoms":["only items from this list: ${TAGS.join(", ")}"],
+"questions":["questions worth asking the doctor that the entry implies, written as questions"],
+"todos":["concrete actions the couple said they need to do"],
+"flags":["any pregnancy warning sign mentioned that needs prompt medical attention — e.g. bleeding, fluid leaking, severe headache or vision changes, sudden swelling of face or hands, reduced baby movement after 28 weeks, severe or constant pain, fever, fits, regular contractions before 37 weeks"]}
+Rules: do not diagnose, do not give medical advice, do not reassure about warning signs. Use empty arrays when nothing applies.`;
+const SYS_WEEK=`You summarise several pregnancy journal entries for an expecting couple in Chennai, India. Entries may mix English and Tamil.
+Return ONLY a JSON object, no markdown:
+{"summary":"4–6 sentences in English describing how the period went: feelings, symptoms, milestones, worries — faithful to the entries",
+"highlights":["up to 5 moments worth remembering"],
+"symptoms":["recurring symptoms"],
+"questions":["questions worth raising at the next doctor visit"],
+"flags":["any pregnancy warning sign mentioned that needs medical attention"]}
+Do not diagnose or give medical advice. Use empty arrays when nothing applies.`;
+
+const busy=new Set();
+async function summarise(id,quiet){
+  const j=S.journal.find(x=>x.id===id);if(!j)return;
+  if(!j.text){toast("Add some notes first — there’s nothing to summarise.");return}
+  if(!aiReady()){toast("Set up AI in More → AI & voice.");return}
+  busy.add(id);render();
+  try{
+    const wk=weekOn(j.date);
+    const r=await aiChat([{role:"system",content:SYS_ENTRY()},{role:"user",content:`Date: ${j.date}\nPregnancy week: ${wk??"unknown"}\nMood: ${j.mood||"not set"}\nTags: ${(j.tags||[]).join(", ")||"none"}\n\nEntry:\n${j.text.slice(0,8000)}`}]);
+    const o=parseJSON(r.text);
+    const cur=S.journal.find(x=>x.id===id);if(!cur)return;
+    cur.ai={summary:String(o.summary||"").slice(0,900),symptoms:arr(o.symptoms).filter(t=>TAGS.includes(t)),questions:arr(o.questions,6),todos:arr(o.todos,6),flags:arr(o.flags,6),at:Date.now(),model:r.model};
+    cur.tags=[...new Set([...(cur.tags||[]),...cur.ai.symptoms])];
+    save();if(!quiet||cur.ai.flags.length)toast(cur.ai.flags.length?"Summary saved — it mentions a warning sign":"Summary saved");
+  }catch(e){toast(e.message)}
+  finally{busy.delete(id);render()}
+}
+async function runDigest(key){
+  const p=preg();
+  let entries,label;
+  if(key==="last7"){const from=iso(addD(today(),-6));entries=S.journal.filter(j=>j.date>=from);label=`${fmtS(addD(today(),-6))} – ${fmtS(today())}`}
+  else{const w=+key.slice(2);entries=S.journal.filter(j=>weekOn(j.date)===w);label=`Week ${w}`}
+  if(!entries.length){toast("No entries in that period.");return}
+  closeSheet();busy.add("digest");render();
+  try{
+    let txt="",room=14000;
+    for(const j of [...entries].sort((a,b)=>a.date.localeCompare(b.date))){
+      const line=`[${j.date}${weekOn(j.date)!=null?", week "+weekOn(j.date):""}] mood ${j.mood||"-"}; tags: ${(j.tags||[]).join(", ")||"-"}\n${(j.text||"(no notes)").slice(0,2500)}\n\n`;
+      if(line.length>room)break;txt+=line;room-=line.length;
+    }
+    const r=await aiChat([{role:"system",content:SYS_WEEK},{role:"user",content:txt}]);
+    const o=parseJSON(r.text);
+    const d={id:uid(),key,label,at:Date.now(),n:entries.length,summary:String(o.summary||"").slice(0,1500),highlights:arr(o.highlights,5),symptoms:arr(o.symptoms),questions:arr(o.questions,6),flags:arr(o.flags,6),model:r.model};
+    S.digests=(S.digests||[]).filter(x=>x.key!==key||key==="last7");S.digests.push(d);save();toast(`${label} summarised`);
+  }catch(e){toast(e.message)}
+  finally{busy.delete("digest");render()}
+}
+
+/* ---- recording ---- */
+const MIC={on:false,kind:null,rec:null,mr:null,stream:null,cancel:false,timer:null};
+function micUI(state,msg){const b=$("#micBtn"),st=$("#micSt");if(b){b.classList.toggle("rec",state==="rec");b.textContent=state==="rec"?"■ Stop":"🎙️ Speak"}if(st)st.textContent=msg||""}
+function appendText(t){const ta=$("#jText");if(!ta||!t)return;ta.value=(ta.value.trim()?ta.value.replace(/\s*$/," "):"")+t}
+function startDevice(onText,onEnd){
+  const r=new SR();r.lang=AI.lang==="auto"?"en-IN":AI.lang;r.continuous=true;r.interimResults=true;
+  let finals="";r.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){const x=e.results[i];if(x.isFinal)finals+=x[0].transcript+" ";else interim+=x[0].transcript}onText(finals,interim)};
+  r.onerror=e=>{toast(e.error==="not-allowed"?"Microphone permission was denied. Allow it in the browser’s site settings.":e.error==="no-speech"?"Didn’t hear anything.":"Speech recognition error: "+e.error)};
+  r.onend=()=>{MIC.on=false;MIC.rec=null;onEnd&&onEnd(finals.trim())};
+  r.start();MIC.on=true;MIC.kind="device";MIC.rec=r;
+}
+async function startAzureRec(onBlob,maxSec){
+  MIC.stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  const mime=["audio/webm;codecs=opus","audio/webm","audio/mp4","audio/ogg"].find(m=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))||"";
+  const mr=new MediaRecorder(MIC.stream,mime?{mimeType:mime}:undefined);const chunks=[];
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+  mr.onstop=()=>{clearTimeout(MIC.timer);MIC.stream.getTracks().forEach(t=>t.stop());MIC.on=false;MIC.mr=null;const blob=new Blob(chunks,{type:mr.mimeType||mime||"audio/webm"});if(!MIC.cancel)onBlob(blob);MIC.cancel=false};
+  mr.start();MIC.on=true;MIC.kind="azure";MIC.mr=mr;MIC.cancel=false;
+  MIC.timer=setTimeout(()=>{if(mr.state==="recording")mr.stop()},(maxSec||600)*1000);
+}
+function stopMic(cancel){if(!MIC.on)return;MIC.cancel=!!cancel;if(MIC.rec)MIC.rec.stop();if(MIC.mr&&MIC.mr.state==="recording")MIC.mr.stop()}
+async function journalMic(){
+  if(MIC.on){stopMic();return}
+  const eng=voiceEngine();
+  if(!eng){toast("Voice isn’t available in this browser. Use Chrome on Android, or set up Azure transcription.");return}
+  try{
+    if(eng==="device"){
+      const ta=$("#jText");const base=ta.value.trim()?ta.value.replace(/\s*$/," "):"";
+      startDevice((f,i)=>{const t=$("#jText");if(t)t.value=base+f+i},()=>micUI("idle",""));
+      micUI("rec","Listening… tap Stop when done.");
+    }else{
+      await startAzureRec(async blob=>{
+        micUI("busy","Transcribing…");
+        try{const t=await transcribe(blob);if(t){appendText(t);micUI("idle","Added to notes.")}else micUI("idle","Didn’t catch any words.")}
+        catch(e){micUI("idle","");toast(e.message)}
+      });
+      micUI("rec","Recording… tap Stop when done (max 10 min).");
+    }
+  }catch(e){micUI("idle","");toast(e&&e.name==="NotAllowedError"?"Microphone permission was denied. Allow it in the browser’s site settings.":"Couldn’t start the microphone.")}
+}
+
+/* ---- admin ---- */
+const LOG=[];
+function log(m){LOG.unshift(`${new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}  ${m}`);if(LOG.length>40)LOG.pop();const el=$("#aiLog");if(el)el.textContent=LOG.join("\n")}
+function sAI(){
+  if(AI.pin&&!U.adminOk)return `<h1>AI & voice</h1><div class="card"><p>This page is locked with an admin PIN.</p><label class="field"><span>PIN</span><input type="password" inputmode="numeric" id="pinIn" autocomplete="off"></label><button class="btn block" style="margin-top:12px" data-a="pinOk">Unlock</button></div>`;
+  const inp=(id,l,v,type="text",note="",extra="")=>`<label class="field"><span>${l}</span><input type="${type}" id="ai_${id}" value="${esc(v||"")}" autocomplete="off" autocapitalize="off" spellcheck="false" ${extra}>${note?`<em>${note}</em>`:""}</label>`;
+  const sel=(id,l,v,opts,note="")=>`<label class="field"><span>${l}</span><select id="ai_${id}">${opts.map(([k,t])=>`<option value="${k}" ${v===k?"selected":""}>${t}</option>`).join("")}</select>${note?`<em>${note}</em>`:""}</label>`;
+  const dot=ok=>`<span class="status ${ok?"ok":"no"}"></span>`;
+  return `<h1>AI & voice</h1>
+  <div class="card"><h2>Status</h2>
+   <div class="li"><span>${dot(aiReady())}AI summaries</span><b class="small">${aiReady()?esc(AI.chat):"Not set up"}</b></div>
+   <div class="li"><span>${dot(!!SR)}Phone speech-to-text</span><b class="small">${SR?"Available":"Not in this browser"}</b></div>
+   <div class="li"><span>${dot(sttReady())}Azure transcription</span><b class="small">${sttReady()?esc(AI.stt):canRecord?"Not set up":"No recorder in browser"}</b></div>
+   <div class="li"><span>Voice in journal uses</span><b class="small">${{device:"Phone speech",azure:"Azure transcription"}[voiceEngine()]||"Nothing available"}</b></div></div>
+
+  <div class="card"><h2>Azure OpenAI connection</h2>
+   ${sel("style","API style",AI.style,[["v1","v1 API (/openai/v1/…) — newer"],["classic","Deployment + api-version — classic"]],"If one style gives 404, try the other.")}
+   ${inp("endpoint","Endpoint",AI.endpoint,"url","Azure portal → your resource → Keys and Endpoint, e.g. https://name.openai.azure.com","placeholder='https://your-resource.openai.azure.com' inputmode='url'")}
+   ${inp("key","API key",AI.key,"password","Stored only on this phone, never in backups.")}
+   <button class="link" style="margin-top:6px" data-a="aiShowKey">Show / hide key</button>
+   ${inp("chat","Chat deployment name",AI.chat,"text","The name you gave the deployment (e.g. gpt-4o-mini), not the model family.")}
+   ${inp("chatVer","Chat api-version (classic only)",AI.chatVer)}</div>
+
+  <div class="card"><h2>Voice</h2>
+   ${sel("voice","Engine for journal dictation",AI.voice,[["device","Phone speech-to-text (free, live)"],["azure","Azure transcription (better for Tamil / Tanglish)"]])}
+   ${inp("stt","Transcription deployment",AI.stt,"text","A whisper or gpt-4o-transcribe deployment. Leave empty to use phone speech only.")}
+   ${inp("sttVer","Transcription api-version (classic only)",AI.sttVer,"text","gpt-4o-transcribe may need a newer preview version.")}
+   ${sel("lang","Spoken language",AI.lang,[["en-IN","English (India)"],["ta-IN","Tamil"],["auto","Auto-detect (Azure only; phone uses English)"]])}</div>
+
+  <div class="card"><h2>Behaviour</h2>
+   <label class="task" style="border:0"><input type="checkbox" class="chk" id="ai_auto" ${AI.auto?"checked":""}><div><div class="t">Summarise entries automatically on save</div><div class="d">Off = only when you tap “Summarise”.</div></div></label>
+   ${inp("pin","Admin PIN (optional)",AI.pin,"password","Locks this page. Not real security — just stops accidental changes.","inputmode='numeric'")}</div>
+
+  <button class="btn block" style="margin-top:14px" data-a="aiSave">Save settings</button>
+
+  <div class="card"><h2>Test</h2>
+   <div class="grid2"><button class="btn ghost sm" data-a="aiTestChat">Test chat</button><button class="btn ghost sm" data-a="aiTestSum">Test a summary</button>
+   <button class="btn ghost sm" data-a="aiTestStt">Test transcription (5 s)</button><button class="btn ghost sm" data-a="aiTestDev">Test phone speech</button></div>
+   <pre class="log" id="aiLog">${LOG.length?esc(LOG.join("\n")):"Save settings, then run a test. Results appear here."}</pre></div>
+
+  <div class="card flat small"><b>Before you rely on it:</b><ul class="b" style="margin-top:6px">
+   <li>Journal text goes to your Azure resource for summarising. Azure OpenAI doesn’t train on it, but it may be retained briefly for abuse monitoring. Make sure your wife is comfortable with that — it’s mostly her words.</li>
+   <li>Phone speech-to-text sends audio to Google (Android) or Apple (iPhone) — not to Azure.</li>
+   <li>Never put the key in the GitHub repo or the HTML. Enter it here on each phone.</li>
+   <li>Set a monthly budget alert on the Azure subscription. A small model like gpt-4o-mini costs very little for a journal.</li>
+   <li>The AI can be wrong. It only summarises — warning signs still mean calling the doctor.</li></ul></div>`;
+}
 
 /* ================= RENDER ================= */
 function render(scrollTop){
@@ -601,6 +865,16 @@ function vJournal(){
   const p=PROMPTS[Math.floor(today()/DAY)%PROMPTS.length];
   let h=`<h1 style="margin:6px 0 12px">Journal</h1>
     <button class="card" style="width:100%;text-align:left;display:block" data-a="journalNew"><div class="muted small">Today’s prompt</div><div style="font:700 18px/1.3 var(--fd);margin-top:4px">${p}</div><div class="link" style="margin-top:10px">Write an entry</div></button>`;
+  if(aiReady()&&S.journal.length){
+    const ds=[...(S.digests||[])].sort((a,b)=>b.at-a.at);
+    h+=`<div class="card"><div class="row between"><h2 style="margin:0">Summaries</h2><button class="btn sm" data-a="digestNew" ${busy.has("digest")?"disabled":""}>${busy.has("digest")?"Summarising…":"Summarise a week"}</button></div>
+     ${ds.length?ds.map((d,i)=>`<details class="dg" ${i===0?"open":""}><summary>${esc(d.label)} <span class="small muted" style="font-weight:400">${plural(d.n,"entry").replace("entrys","entries")}</span></summary>
+       <p style="margin-top:6px">${esc(d.summary)}</p>
+       ${d.flags&&d.flags.length?`<div class="verdict" style="background:color-mix(in srgb,var(--lotus) 15%,transparent)"><b>Mentioned warning signs:</b> ${d.flags.map(esc).join("; ")}. If not already discussed, call the doctor.</div>`:""}
+       ${d.highlights.length?`<div class="small" style="margin-top:8px"><b>Moments</b><ul class="b">${d.highlights.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
+       ${d.questions.length?`<div class="small" style="margin-top:8px"><b>For the doctor</b><ul class="b">${d.questions.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><button class="link" data-a="aiQ" data-v="d:${d.id}">Add to next visit</button></div>`:""}
+       <button class="link small" style="margin-top:6px;color:var(--muted)" data-a="digestDel" data-v="${d.id}">Delete summary</button></details>`).join(""):`<p class="small muted" style="margin-top:6px">Pick a week and the AI writes a short recap from your entries — useful before doctor visits and lovely to read later.</p>`}</div>`;
+  }
   if(!S.journal.length)return h+`<div class="empty"><span class="qi">📖</span>Entries, moods, symptoms and bump photos will collect here — a record you’ll be glad to have later.</div>`;
   const js=[...S.journal].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
   h+=js.map(j=>{
@@ -609,6 +883,12 @@ function vJournal(){
       <div class="row between"><div class="when">${fmt(parse(j.date),{weekday:"short",day:"numeric",month:"short",year:"numeric"})}${wk!=null?`, week ${wk}`:""}</div><div style="font-size:24px">${j.mood||""}</div></div>
       ${j.tags&&j.tags.length?`<div>${j.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`:""}
       ${j.text?`<div class="txt">${esc(j.text)}</div>`:""}
+      ${busy.has(j.id)?`<div class="ai small muted">Summarising…</div>`:j.ai?`<div class="ai"><div class="small muted">AI summary</div><div style="margin-top:2px">${esc(j.ai.summary)}</div>
+        ${j.ai.flags.length?`<div class="verdict" style="background:color-mix(in srgb,var(--lotus) 18%,transparent)"><b>Warning sign mentioned:</b> ${j.ai.flags.map(esc).join("; ")}. Call the doctor if you haven’t.</div>`:""}
+        ${j.ai.questions.length?`<div class="small" style="margin-top:8px"><b>Ask the doctor</b><ul>${j.ai.questions.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${j.ai.qAdded?`<span class="small muted">Added to visit</span>`:`<button class="link" data-a="aiQ" data-v="j:${j.id}">Add to next visit</button>`}</div>`:""}
+        ${j.ai.todos.length?`<div class="small" style="margin-top:8px"><b>To-dos</b><ul>${j.ai.todos.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${j.ai.tAdded?`<span class="small muted">Added to To-do</span>`:`<button class="link" data-a="aiTodo" data-v="${j.id}">Add to To-do</button>`}</div>`:""}
+        <button class="link small" style="margin-top:6px;color:var(--muted)" data-a="aiSum" data-v="${j.id}">Redo summary</button></div>`
+      :(j.text&&aiReady()?`<button class="btn ghost sm" style="margin-top:10px" data-a="aiSum" data-v="${j.id}">✨ Summarise</button>`:"")}
       <button class="link" style="margin-top:8px" data-a="journalEdit" data-v="${j.id}">Edit</button></div></article>`}).join("");
   return h;
 }
@@ -625,17 +905,20 @@ function vMore(){
     ${t("kicks","👣","Kick counter","Daily from 28 weeks")}
     ${t("contr","⏱️","Contraction timer","When to leave for hospital")}
     ${t("schemes","🏛️","Schemes & rights","Government benefits, leave, documents")}
+    ${t("buy","🛒","Things to buy","What you need, what can wait, what to skip")}
+    ${t("sounds","🎶","Sounds & bonding","What baby hears, before and after birth")}
     ${t("bag","🧳","Hospital bag","Packing checklist")}
     ${t("food","🍛","Food guide","Eat, limit, avoid")}
     ${t("vaccines","💉","Baby vaccines","Schedule from birth date")}
     ${t("warn","🚨","Warning signs","When to call or go")}
     ${t("profile","⚙️","Details & backup","Dates, contacts, export")}
+    ${t("ai","✨","AI & voice","Admin: Azure OpenAI setup and tests")}
   </div>`;
 }
 
 function vSub(){
   const back=`<button class="back" data-a="back">‹ More</button>`;
-  const f={appts:sAppts,meds:sMeds,weight:sWeight,bp:sBp,kicks:sKicks,contr:sContr,schemes:sSchemes,bag:sBag,food:sFood,vaccines:sVax,warn:sWarn,profile:sProfile}[U.sub];
+  const f={appts:sAppts,meds:sMeds,weight:sWeight,bp:sBp,kicks:sKicks,contr:sContr,schemes:sSchemes,bag:sBag,buy:sBuy,sounds:sSounds,food:sFood,vaccines:sVax,warn:sWarn,profile:sProfile,ai:sAI}[U.sub];
   return back+(f?f():"");
 }
 
@@ -768,6 +1051,63 @@ function sSchemes(){
     <li><b>ABHA</b> — optional digital health ID for mother and baby.</li>
     <li><b>Nominee updates</b> — PF, insurance and bank nominees, if you want the child added.</li></ul></div>`;
 }
+function buyItems(){return BUY.map((b,i)=>({k:"b"+i,g:b[0],t:b[1],d:b[2],tag:b[3],w:b[4]})).concat(S.buyCustom.map(c=>({k:c.id,g:"Added by you",t:c.t,d:c.d||"",tag:c.tag||"must",w:0,custom:1})))}
+function sBuy(){
+  const all=buyItems(),f=S.buyF||"must";
+  const need=all.filter(x=>x.tag==="must");const got=need.filter(x=>S.buy[x.k]).length;
+  const wk=gw();
+  const list=all.filter(x=>f==="all"?x.tag!=="skip":x.tag===f);
+  const groups={};list.forEach(x=>{(groups[x.g]=groups[x.g]||[]).push(x)});
+  let h=`<h1>Things to buy</h1>
+   <div class="card"><div class="row between"><b>${got} of ${need.length} must-haves ready</b><span class="small muted">${need.length?Math.round(got/need.length*100):0}%</span></div><div class="bar" style="margin-top:8px"><i style="width:${need.length?got/need.length*100:0}%"></i></div>
+   <p class="small muted" style="margin-top:8px">Aim to have every must-have by 36 weeks. Babies need far less than shops suggest — borrow or accept hand-me-downs for anything except the car seat and mattress.</p></div>
+   <div class="seg" style="margin-top:14px">${[["must","Must"],["nice","Nice"],["later","Later"],["skip","Skip"],["all","All"]].map(([k,l])=>`<button class="${f===k?"on":""}" data-a="buyF" data-v="${k}">${l}</button>`).join("")}</div>`;
+  if(f==="skip")h+=`<div class="card warn small" style="margin-top:14px">These get sold hard and gifted often. Some are useless; a few are actively unsafe. Politely redirect relatives who offer them.</div>`;
+  Object.entries(groups).forEach(([g,items])=>{
+    h+=`<div class="card"><h2>${esc(g)}</h2>${items.map(x=>{
+      const due=x.w&&wk!=null&&!S.buy[x.k]&&x.tag==="must"&&wk>=x.w-2;
+      return `<label class="task ${S.buy[x.k]?"done":""}">${x.tag==="skip"?`<span style="font-size:22px;width:26px;text-align:center">✕</span>`:`<input type="checkbox" class="chk" data-c="buy" data-v="${x.k}" ${S.buy[x.k]?"checked":""}>`}
+       <div><div class="t">${esc(x.t)}</div>${x.d?`<div class="d">${esc(x.d)}</div>`:""}
+       <div>${due?'<span class="tag over">Buy now</span>':""}${f==="all"?`<span class="tag cat">${BUYTAG[x.tag]}</span>`:""}${x.w&&x.tag!=="skip"&&x.w<=40?`<span class="tag">By week ${x.w}</span>`:""}${x.custom?`<button class="tag" data-a="buyDel" data-v="${x.k}">Delete</button>`:""}</div></div></label>`}).join("")}</div>`;
+  });
+  h+=`<div class="card"><h2>Add an item</h2><input type="text" id="buyNew" placeholder="e.g. Room-darkening curtains"><div class="row" style="margin-top:10px"><select id="buyTag" style="flex:1"><option value="must">Must have</option><option value="nice">Nice to have</option><option value="later">Can wait</option></select><button class="btn sm" data-a="buyAdd">Add</button></div></div>
+   <button class="btn ghost block" style="margin-top:14px" data-a="buyShare">Share what we still need</button>
+   <p class="small muted" style="margin-top:8px">Handy before Valaikappu — send relatives the list so gifts are useful.</p>`;
+  return h;
+}
+function sSounds(){
+  const p=preg(),b=babyAge(),w=p?p.week:null;
+  let stage;
+  if(b)stage="Your baby hears you clearly now and already knows your voices from the womb.";
+  else if(w==null||w<18)stage="Hearing hasn’t started yet — the ears are still forming. Start the habit anyway; it’s for you as much as the baby.";
+  else if(w<25)stage="The ears are working and the baby is starting to pick up sounds — mostly her heartbeat, digestion and her voice.";
+  else stage="Baby now hears outside sounds, muffled, and reacts to familiar voices with movement. Your voices are being learned right now.";
+  let h=`<h1>Sounds & bonding</h1><div class="card"><div class="muted small">${b?"Now":w!=null?`At ${w} weeks`:"Right now"}</div><p style="margin-top:6px;font-weight:700">${stage}</p></div>
+  <div class="card"><h2>In the womb</h2><ul class="b">
+   <li><b>Your voices matter most.</b> The mother’s voice reaches the baby from inside her body too. Newborns prefer the voices, songs and even stories they heard before birth.</li>
+   <li><b>Music:</b> anything you both find calming — Tamil thalattu, carnatic or veena and flute instrumentals, devotional songs, whatever you love. Normal room volume from a speaker.</li>
+   <li><b>No headphones on the belly.</b> Volume can’t be judged from outside, and the baby can’t move away from it.</li>
+   <li><b>Avoid long exposure to very loud noise</b> — over roughly 85 dB, like concerts or close-range firecrackers.</li></ul></div>
+  <div class="card"><h2>After birth</h2><ul class="b">
+   <li><b>Talk all day.</b> Narrate what you’re doing, in Tamil, English, whatever you speak at home. Pause and let the baby “answer” with coos — this back-and-forth builds language.</li>
+   <li><b>Sing the same lullaby</b> you used in pregnancy at sleep time.</li>
+   <li><b>Read from day one.</b> Picture books, poems, even the newspaper aloud.</li>
+   <li><b>White noise, if used:</b> keep it quiet (about shower-noise level), at least 2 metres from the cot, and not at full volume all night. Some machines are loud enough to harm hearing.</li>
+   <li><b>No screens under 2 years</b> — no phone videos, rhymes channels or TV in the background. IAP and WHO both advise this; babies learn language from people, not screens.</li></ul></div>
+  <div class="card"><h2>Hearing milestones</h2>
+   <div class="li"><b>Birth</b><span class="small r">Newborn hearing screen before discharge or by 1 month</span></div>
+   <div class="li"><b>0–3 months</b><span class="small r">Startles at loud sounds, calms to your voice</span></div>
+   <div class="li"><b>4–6 months</b><span class="small r">Turns eyes or head towards sounds</span></div>
+   <div class="li"><b>6–9 months</b><span class="small r">Babbles (“ba-ba”, “ma-ma”), responds to name</span></div>
+   <div class="li"><b>12 months</b><span class="small r">First words, understands simple words</span></div>
+   <p class="small muted" style="margin-top:8px">Missing any of these? Ask the paediatrician for a hearing test — early detection changes outcomes.</p></div>
+  <div class="card"><h2>Bonding habits</h2>${BOND.map(([k,t,d,wk])=>`<label class="task ${S.bond[k]?"done":""}"><input type="checkbox" class="chk" data-c="bond" data-v="${k}" ${S.bond[k]?"checked":""}><div><div class="t">${t}</div><div class="d">${d}</div>${w!=null&&w>=wk-2&&!b&&!S.bond[k]?'<span class="tag now">Good time now</span>':""}</div></label>`).join("")}</div>
+  <div class="card"><h2>Our songs</h2>
+   ${S.songs.length?S.songs.map(x=>`<div class="li"><span>${esc(x.t)}${x.who?` <span class="small muted">${esc(x.who)}</span>`:""}</span><button class="link" data-a="songDel" data-v="${x.id}">✕</button></div>`).join(""):'<p class="small muted">The lullabies and songs you choose — so whoever is on night duty knows what works.</p>'}
+   <input type="text" id="songT" placeholder="Song or lullaby" style="margin-top:10px"><div class="row" style="margin-top:8px"><input type="text" id="songW" placeholder="Who sings it (optional)" style="flex:1"><button class="btn sm" data-a="songAdd">Add</button></div></div>
+  <div class="card flat small"><b>Honest note on myths:</b> playing Mozart or other “brain” music doesn’t make babies smarter — that claim didn’t hold up in research. Garbha sanskar practices are fine if they relax her, but don’t treat them as an IQ booster or a source of guilt. Calm parents and their voices are what count.</div>`;
+  return h;
+}
 function sBag(){
   let total=0,done=0;
   const h=Object.entries(BAG).map(([g,items])=>`<div class="card"><h2>${g}</h2>${items.map(it=>{const k=g+"|"+it;total++;if(S.bag[k])done++;return `<label class="task ${S.bag[k]?"done":""}"><input type="checkbox" class="chk" data-c="bag" data-v="${esc(k)}" ${S.bag[k]?"checked":""}><div class="t" style="margin-top:2px">${esc(it)}</div></label>`}).join("")}</div>`).join("");
@@ -852,6 +1192,7 @@ function journalSheet(j){
    <div class="field"><span>Mood</span><div class="moods">${MOODS.map(m=>`<button data-a="mood" data-v="${m}" class="${U.draft.mood===m?"on":""}">${m}</button>`).join("")}</div></div>
    <div class="field"><span>How it felt</span><div>${TAGS.map(t=>`<button class="toggle ${U.draft.tags.has(t)?"on":""}" data-a="jtag" data-v="${t}">${t}</button>`).join("")}</div></div>
    <label class="field"><span>Notes</span><textarea id="jText" placeholder="${P}">${esc(j?j.text:"")}</textarea></label>
+   ${voiceEngine()?`<div class="microw"><button class="mic" id="micBtn" data-a="mic">🎙️ Speak</button><select id="micLang" data-c2="lang" style="width:auto;min-height:40px;padding:8px 10px">${[["en-IN","English"],["ta-IN","தமிழ்"]].concat(voiceEngine()==="azure"?[["auto","Auto"]]:[]).map(([k,t])=>`<option value="${k}" ${AI.lang===k?"selected":""}>${t}</option>`).join("")}</select><span class="small muted" id="micSt"></span></div>`:""}
    <div class="field"><span>Photo</span><div id="jPhotoBox">${U.draft.photo?`<img src="${U.draft.photo}" style="width:100%;border-radius:14px" alt="">`:""}</div>
     <div class="row" style="margin-top:8px"><label class="btn ghost sm">${U.draft.photo?"Replace photo":"Add bump or scan photo"}<input type="file" accept="image/*" id="jPhoto" hidden></label>${U.draft.photo?'<button class="link" data-a="jPhotoDel">Remove</button>':""}</div>
     <em style="display:block;font-size:13px;color:var(--muted);margin-top:4px">Photos are shrunk to save space.</em></div>
@@ -901,12 +1242,15 @@ const A={
   journalSave(){
     const d=U.draft,text=val("jText");
     if(!text&&!d.mood&&!d.tags.size&&!d.photo){toast("Add a note, mood or photo first.");return}
+    const old=S.journal.find(j=>j.id===d.id);
     const e={id:d.id||uid(),date:val("jDate")||iso(today()),mood:d.mood,tags:[...d.tags],text,photo:d.photo};
+    if(old&&old.ai&&old.text===text){e.ai=old.ai}
     const i=S.journal.findIndex(j=>j.id===e.id);
     const prev=i>=0?S.journal[i]:null;
     if(i>=0)S.journal[i]=e;else S.journal.push(e);
     if(!save()){if(i>=0)S.journal[i]=prev;else S.journal.pop();return}
     closeSheet();U.tab="journal";U.sub=null;render(true);toast("Entry saved");
+    if(AI.auto&&aiReady()&&text&&!e.ai)summarise(e.id,true);
   },
   journalDel(){if(!confirm("Delete this entry?"))return;S.journal=S.journal.filter(j=>j.id!==U.draft.id);save();closeSheet();render();toast("Entry deleted")},
   apptNew(){apptSheet(null)},
@@ -921,6 +1265,74 @@ const A={
   customNew(el){customSheet(el.dataset.v)},
   customSave(){const t=val("cT");if(!t){toast("Write the task first.");return}S.custom.push({id:"c_"+uid(),m:val("cM"),t,d:val("cD")});save();closeSheet();render();toast("Task added")},
   delCustom(el,e){e.preventDefault();if(!confirm("Delete this task?"))return;S.custom=S.custom.filter(c=>c.id!==el.dataset.v);delete S.tasks[el.dataset.v];save();render()},
+  buyF(el){S.buyF=el.dataset.v;save();render()},
+  buyAdd(){const t=val("buyNew");if(!t){toast("Type the item first.");return}S.buyCustom.push({id:"bc_"+uid(),t,tag:val("buyTag")});save();render();toast("Item added")},
+  buyDel(el,e){e.preventDefault();S.buyCustom=S.buyCustom.filter(c=>c.id!==el.dataset.v);delete S.buy[el.dataset.v];save();render()},
+  buyShare(){
+    const need=buyItems().filter(x=>(x.tag==="must"||x.tag==="nice")&&!S.buy[x.k]);
+    if(!need.length){toast("Nothing left to buy.");return}
+    const text="Baby things we still need:\n"+need.map(x=>`• ${x.t}`).join("\n");
+    if(navigator.share)navigator.share({title:"Baby list",text}).catch(()=>{});
+    else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>toast("List copied")).catch(()=>toast("Couldn’t copy the list"));
+  },
+  songAdd(){const t=val("songT");if(!t){toast("Type a song first.");return}S.songs.push({id:uid(),t,who:val("songW")});save();render()},
+  songDel(el){S.songs=S.songs.filter(x=>x.id!==el.dataset.v);save();render()},
+  mic(){journalMic()},
+  aiSum(el){summarise(el.dataset.v)},
+  digestNew(){
+    const weeks=[...new Set(S.journal.map(j=>weekOn(j.date)).filter(w=>w!=null))].sort((a,b)=>b-a);
+    openSheet(`<h2>Summarise</h2><p class="small muted">The AI reads all entries in the period you pick.</p>
+     <div style="margin-top:12px"><button class="toggle" data-a="digestRun" data-v="last7">Last 7 days</button>${weeks.map(w=>`<button class="toggle" data-a="digestRun" data-v="w:${w}">Week ${w}</button>`).join("")}</div>
+     <div class="actions"><button class="btn ghost" data-a="close">Cancel</button></div>`)},
+  digestRun(el){runDigest(el.dataset.v)},
+  digestDel(el){if(!confirm("Delete this summary?"))return;S.digests=S.digests.filter(d=>d.id!==el.dataset.v);save();render()},
+  aiQ(el){
+    const [t,id]=el.dataset.v.split(":");let qs=[],src=null;
+    if(t==="j"){src=S.journal.find(j=>j.id===id);qs=src&&src.ai?src.ai.questions:[]}else{src=S.digests.find(d=>d.id===id);qs=src?src.questions:[]}
+    if(!qs.length)return;
+    const nx=S.appts.filter(a=>a.date>=iso(today())).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))[0];
+    const add=qs.map(q=>"• "+q).join("\n");
+    if(nx){nx.q=(nx.q?nx.q+"\n":"")+add;if(t==="j")src.ai.qAdded=1;save();render();toast(`Added to ${nx.title}`)}
+    else{apptSheet(null);const q=$("#aQ");if(q)q.value=add;toast("No visit booked yet — add one to keep these questions.")}
+  },
+  aiTodo(el){const j=S.journal.find(x=>x.id===el.dataset.v);if(!j||!j.ai)return;const m=monthFor(gw());j.ai.todos.forEach(t=>S.custom.push({id:"c_"+uid(),m,t,d:"From journal"}));j.ai.tAdded=1;save();render();toast(`${plural(j.ai.todos.length,"task")} added`)},
+  pinOk(){if(val("pinIn")===AI.pin){U.adminOk=true;render()}else toast("Wrong PIN")},
+  aiShowKey(){const k=$("#ai_key");if(k)k.type=k.type==="password"?"text":"password"},
+  aiSave(){
+    let ep=val("ai_endpoint");
+    if(ep){try{const u=new URL(ep.startsWith("http")?ep:"https://"+ep);if(u.protocol!=="https:")throw 0;ep=u.origin}catch(e){toast("Endpoint must be a valid https URL.");return}}
+    Object.assign(AI,{style:val("ai_style"),endpoint:ep,key:val("ai_key"),chat:val("ai_chat"),chatVer:val("ai_chatVer")||AIDEF.chatVer,voice:val("ai_voice"),stt:val("ai_stt"),sttVer:val("ai_sttVer")||AIDEF.sttVer,lang:val("ai_lang"),auto:$("#ai_auto").checked,pin:val("ai_pin")});
+    if(AI.pin)U.adminOk=true;
+    saveAI();log("Settings saved.");render();toast("Settings saved");
+  },
+  async aiTestChat(){
+    if(!aiReady()){log("✗ Fill endpoint, key and chat deployment, then Save.");return}
+    log(`→ POST ${chatURL()}`);const t0=performance.now();
+    try{const r=await aiChat([{role:"user",content:"Reply with exactly: OK, Thottil is connected."}]);
+      log(`✓ ${Math.round(performance.now()-t0)} ms, model ${r.model}${r.usage?`, ${r.usage.total_tokens} tokens`:""}\n  Reply: ${r.text}`)}
+    catch(e){log("✗ "+e.message)}
+  },
+  async aiTestSum(){
+    if(!aiReady()){log("✗ Set up chat first.");return}
+    log("→ Summarising a sample entry…");
+    try{const r=await aiChat([{role:"system",content:SYS_ENTRY()},{role:"user",content:"Date: "+iso(today())+"\nPregnancy week: 20\n\nEntry:\nRomba tired today, back pain after office. Felt baby kick for the first time in the evening, both of us were so happy! Need to book the anomaly scan and ask doctor if the itching on my belly is normal. Also need to buy maternity bras."}]);
+      log("✓ Raw reply:\n"+r.text);const o=parseJSON(r.text);log(o.summary&&Array.isArray(o.todos)?"✓ Parsed as JSON — summaries will work.":"! Reply wasn’t clean JSON. Summaries will still save the text, but try a newer model.")}
+    catch(e){log("✗ "+e.message)}
+  },
+  async aiTestStt(){
+    if(!sttReady()){log("✗ Fill the transcription deployment and Save. "+(canRecord?"":"This browser can’t record audio."));return}
+    if(MIC.on){log("Already recording.");return}
+    try{await startAzureRec(async blob=>{log(`→ Recorded ${(blob.size/1024).toFixed(0)} KB (${blob.type||"unknown type"}). Sending to ${sttURL()}`);
+        const t0=performance.now();try{const t=await transcribe(blob);log(`✓ ${Math.round(performance.now()-t0)} ms\n  Heard: ${t||"(nothing)"}`)}catch(e){log("✗ "+e.message)}},5);
+      log("● Recording for 5 seconds — say something…")}
+    catch(e){log("✗ Microphone: "+(e.name==="NotAllowedError"?"permission denied":e.message))}
+  },
+  aiTestDev(){
+    if(!SR){log("✗ This browser has no speech recognition. Chrome on Android works; on iPhone use Safari.");return}
+    if(MIC.on){log("Already listening.");return}
+    try{startDevice((f,i)=>{},t=>log(t?`✓ Heard: ${t}`:"! Heard nothing."));log(`● Listening (${AI.lang==="auto"?"en-IN":AI.lang}) for 6 seconds…`);setTimeout(()=>stopMic(),6000)}
+    catch(e){log("✗ "+e.message)}
+  },
   medAdd(){const v=val("medNew");if(!v)return;if(!S.meds.list.includes(v))S.meds.list.push(v);save();render()},
   medDel(el){S.meds.list.splice(+el.dataset.v,1);save();render()},
   wAdd(){const kg=parseFloat(val("wKg"));if(!kg||kg<30||kg>200){toast("Enter weight in kg.");return}S.weights.push({id:uid(),date:val("wDate")||iso(today()),kg:Math.round(kg*10)/10});save();render();toast("Weight saved")},
@@ -965,12 +1377,15 @@ document.addEventListener("change",async e=>{
     if(el.dataset.c==="task"){if(el.checked)S.tasks[k]=iso(today());else delete S.tasks[k]}
     else if(el.dataset.c==="med"){const t=iso(today());const l=S.meds.log[t]=S.meds.log[t]||[];if(el.checked){if(!l.includes(k))l.push(k)}else S.meds.log[t]=l.filter(x=>x!==k)}
     else if(el.dataset.c==="bag"){if(el.checked)S.bag[k]=1;else delete S.bag[k]}
+    else if(el.dataset.c==="buy"){if(el.checked)S.buy[k]=iso(today());else delete S.buy[k]}
+    else if(el.dataset.c==="bond"){if(el.checked)S.bond[k]=iso(today());else delete S.bond[k]}
     else if(el.dataset.c==="vax"){if(el.checked)S.vax[k]=iso(today());else delete S.vax[k]}
     save();
     if(el.dataset.c==="task"&&el.checked&&navigator.vibrate)navigator.vibrate(20);
     setTimeout(render,el.checked?250:0);
     return;
   }
+  if(el.id==="micLang"){AI.lang=el.value;saveAI();return}
   if(el.id==="jPhoto"&&el.files[0]){
     try{U.draft.photo=await compress(el.files[0]);$("#jPhotoBox").innerHTML=`<img src="${U.draft.photo}" style="width:100%;border-radius:14px" alt="">`}
     catch(err){toast("Couldn’t read that photo. Try a JPG or PNG.")}
