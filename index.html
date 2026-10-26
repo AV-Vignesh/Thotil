@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F5FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141019" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Thottil">
+<title>Thottil — our pregnancy companion</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌼</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%234B2E83'/><text x='50' y='68' font-size='60' text-anchor='middle'>🌼</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F6F5FA;--surface:#FFFFFF;--surface2:#EEEBF5;--ink:#241A3B;--muted:#6B6280;--line:#E2DEEC;
+  --plum:#4B2E83;--plum-ink:#FFFFFF;--turmeric:#E3A21A;--lotus:#D9577F;--leaf:#2F8A62;--danger:#B42318;
+  --fd:'Bricolage Grotesque',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --fb:'Atkinson Hyperlegible',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#141019;--surface:#1E1828;--surface2:#2A2236;--ink:#EEE9F7;--muted:#A79FB8;--line:#352C44;
+  --plum:#B9A2F0;--plum-ink:#1B1326;--turmeric:#F2B53A;--lotus:#F07CA0;--leaf:#5FC495;--danger:#FF8A80;
+  color-scheme:dark;
+}}
+html{height:100%;-webkit-text-size-adjust:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.5 var(--fb);
+  padding-bottom:calc(84px + env(safe-area-inset-bottom,0px));-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:3px solid var(--turmeric);outline-offset:2px;border-radius:8px}
+a{color:var(--plum)}
+
+.top{position:sticky;top:0;z-index:6;background:var(--bg);
+  padding:calc(12px + env(safe-area-inset-top,0px)) 18px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid transparent}
+.top.scrolled{border-bottom-color:var(--line)}
+.brand{font:800 22px/1 var(--fd);letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.brand small{font:400 13px var(--fb);color:var(--muted);letter-spacing:0}
+.sos{background:var(--lotus);color:#fff;font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px}
+main{max-width:620px;margin:0 auto;padding:4px 16px 28px}
+
+h1{font:800 clamp(28px,8vw,36px)/1.05 var(--fd);letter-spacing:-.03em}
+h2{font:700 20px/1.2 var(--fd);letter-spacing:-.01em;margin-bottom:10px}
+h3{font:700 16px/1.3 var(--fd)}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+p+p{margin-top:8px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:14px}
+.card.flat{background:var(--surface2);border-color:transparent}
+.card.warn{border-color:var(--lotus);background:color-mix(in srgb,var(--lotus) 9%,var(--surface))}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.stack>*+*{margin-top:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* hero garland */
+.hero{text-align:center;padding:6px 0 0;position:relative}
+.garland{width:min(80vw,300px);height:auto;display:block;margin:0 auto}
+.bead{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.bead.on{fill:var(--turmeric);stroke:var(--turmeric)}
+.bead.tri{stroke:var(--plum)}
+.bead.now{fill:var(--lotus);stroke:var(--lotus)}
+@media (prefers-reduced-motion:no-preference){.bead.now{animation:pulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}}
+@keyframes pulse{50%{transform:scale(1.45)}}
+.hero-center{position:absolute;left:50%;top:calc(6px + min(40vw,150px));transform:translate(-50%,-50%);text-align:center;width:62%}
+.big{font:800 clamp(56px,18vw,78px)/.9 var(--fd);letter-spacing:-.05em;color:var(--plum)}
+.big-sub{font:700 15px var(--fd);margin-top:4px}
+.hero-meta{display:flex;justify-content:center;gap:22px;margin-top:10px}
+.hero-meta div{text-align:center}
+.hero-meta b{display:block;font:700 20px var(--fd)}
+.hero-meta span{font-size:13px;color:var(--muted)}
+
+.size{display:flex;gap:14px;align-items:center}
+.size .emo{font-size:46px;line-height:1;width:64px;height:64px;display:grid;place-items:center;background:var(--surface2);border-radius:18px;flex:none}
+
+/* tasks */
+.task{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
+.task .t{font-weight:700;line-height:1.3}
+.task .d{font-size:14px;color:var(--muted);margin-top:3px}
+.task.done .t{text-decoration:line-through;text-decoration-color:var(--muted);color:var(--muted)}
+.chk{appearance:none;-webkit-appearance:none;width:26px;height:26px;border:2px solid var(--plum);border-radius:50%;display:grid;place-items:center;margin-top:1px;cursor:pointer;flex:none;background:var(--surface)}
+.chk:checked{background:var(--leaf);border-color:var(--leaf)}
+.chk:checked::after{content:"";width:7px;height:12px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;margin-top:6px;margin-right:4px;background:var(--surface2);color:var(--muted)}
+.tag.now{background:color-mix(in srgb,var(--turmeric) 22%,transparent);color:var(--ink)}
+.tag.over{background:color-mix(in srgb,var(--lotus) 20%,transparent);color:var(--ink)}
+.tag.cat{background:transparent;border:1px solid var(--line)}
+
+.bar{height:10px;background:var(--surface2);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--leaf);border-radius:999px;transition:width .4s}
+
+/* chips & segmented */
+.chips{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 8px;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;scroll-snap-align:start;padding:8px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:700;font-size:14px;white-space:nowrap}
+.chip.on{background:var(--plum);color:var(--plum-ink);border-color:var(--plum)}
+.chip.here{box-shadow:inset 0 -3px 0 var(--turmeric)}
+.seg{display:flex;background:var(--surface2);border-radius:14px;padding:4px;gap:4px}
+.seg button{flex:1;padding:8px 6px;border-radius:10px;font-weight:700;font-size:14px;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--ink)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--plum);color:var(--plum-ink);font-weight:700;padding:12px 18px;border-radius:14px;min-height:46px;text-decoration:none}
+.btn.block{width:100%}
+.btn.ghost{background:var(--surface2);color:var(--ink)}
+.btn.danger{background:var(--danger);color:#fff}
+.btn.lotus{background:var(--lotus);color:#fff}
+.btn.sm{min-height:36px;padding:7px 12px;font-size:14px;border-radius:11px}
+.link{color:var(--plum);font-weight:700;font-size:14px}
+
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.quick button{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 4px;font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:6px}
+.quick .qi{font-size:24px;line-height:1}
+
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:6px;min-height:96px}
+.tile .qi{font-size:26px}
+.tile b{font:700 15px var(--fd)}
+.tile span{font-size:13px;color:var(--muted);line-height:1.3}
+
+/* forms */
+.field{display:block;margin-top:12px}
+.field>span{display:block;font-size:14px;font-weight:700;margin-bottom:5px}
+.field>em{display:block;font-size:13px;color:var(--muted);font-style:normal;margin-top:4px}
+input[type=text],input[type=date],input[type=time],input[type=number],input[type=tel],select,textarea{
+  width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-size:16px;min-height:46px}
+textarea{min-height:120px;resize:vertical;line-height:1.5}
+.moods{display:flex;gap:6px;flex-wrap:wrap}
+.moods button{font-size:26px;width:46px;height:46px;border-radius:14px;background:var(--surface2);border:2px solid transparent}
+.moods button.on{border-color:var(--plum);background:var(--surface)}
+.toggle{display:inline-block;padding:7px 12px;margin:0 6px 6px 0;border-radius:999px;border:1px solid var(--line);font-size:14px;font-weight:700;background:var(--surface)}
+.toggle.on{background:var(--plum);color:var(--plum-ink);border-color:var(--plum)}
+
+/* journal */
+.entry{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.entry img{width:100%;display:block;max-height:420px;object-fit:cover}
+.entry .in{padding:14px 16px}
+.entry .when{font:700 14px var(--fd);color:var(--muted)}
+.entry .txt{white-space:pre-wrap;margin-top:6px}
+
+/* lists */
+.li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line)}
+.li:first-child{border-top:0}
+.li .r{text-align:right}
+.pill{font-weight:700;font-family:var(--fd)}
+.ok{color:var(--leaf)} .bad{color:var(--danger)}
+.chart{width:100%;height:150px;display:block}
+.chart .ln{fill:none;stroke:var(--plum);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.chart .pt{fill:var(--turmeric)}
+.chart .gd{stroke:var(--line);stroke-width:1}
+.chart text{fill:var(--muted);font-size:11px;font-family:var(--fb)}
+
+.counter{width:min(64vw,240px);aspect-ratio:1;border-radius:50%;margin:10px auto 0;display:grid;place-items:center;background:var(--plum);color:var(--plum-ink);font:800 64px/1 var(--fd);border:10px solid color-mix(in srgb,var(--plum) 25%,var(--bg))}
+.counter small{display:block;font:700 14px var(--fb);margin-top:6px;opacity:.85}
+.counter:active{transform:scale(.97)}
+
+.back{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--plum);padding:6px 0;margin-bottom:6px}
+.scheme .hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.scheme dl{margin-top:8px;font-size:15px}
+.scheme dt{font-weight:700;margin-top:8px}
+.scheme dd{color:var(--ink)}
+.verdict{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--surface2);font-size:14px}
+table.t{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+table.t td{padding:6px 0;border-top:1px solid var(--line);vertical-align:top}
+table.t td:last-child{text-align:right;font-weight:700;white-space:nowrap;padding-left:8px}
+ul.b{padding-left:20px} ul.b li+li{margin-top:5px}
+
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--surface);border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(5,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--muted);padding:6px 0;position:relative}
+.tabs svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tabs button.on{color:var(--plum)}
+.tabs button.on::before{content:"";position:absolute;top:-6px;width:8px;height:8px;border-radius:50%;background:var(--turmeric)}
+
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(20,12,30,.45);display:none;align-items:flex-end;justify-content:center}
+.sheet.open{display:flex}
+.panel{background:var(--surface);width:100%;max-width:620px;max-height:90vh;overflow:auto;border-radius:24px 24px 0 0;
+  padding:8px 18px calc(18px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}
+@media (prefers-reduced-motion:no-preference){.sheet.open .panel{animation:up .22s ease-out}}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+.grab{width:42px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 10px}
+.actions{display:flex;gap:10px;margin-top:18px}
+.actions .btn{flex:1}
+
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;
+  background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;z-index:30;pointer-events:none;transition:.25s;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{text-align:center;padding:28px 10px;color:var(--muted)}
+.empty .qi{font-size:40px;display:block;margin-bottom:6px}
+</style>
+</head>
+<body>
+<header class="top" id="top">
+  <div class="brand">🌼 Thottil</div>
+  <button class="sos" data-a="sos" aria-label="Emergency contacts and warning signs">Emergency</button>
+</header>
+<main id="view"></main>
+
+<nav class="tabs" id="tabs" aria-label="Main">
+  <button data-a="tab" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Today</button>
+  <button data-a="tab" data-v="guide"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 7h6"/></svg>Guide</button>
+  <button data-a="tab" data-v="tasks"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>To-do</button>
+  <button data-a="tab" data-v="journal"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Journal</button>
+  <button data-a="tab" data-v="more"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>More</button>
+</nav>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="panel" id="panel"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+
+<script>
+"use strict";
+/* ================= DATA ================= */
+const SIZE={
+ 4:["🌱","a poppy seed","0.1 cm",""],5:["🌱","a sesame seed","0.2 cm",""],6:["🫘","a masoor dal grain","0.6 cm",""],
+ 7:["🫐","a blueberry","1 cm",""],8:["🫘","a rajma bean","1.6 cm","1 g"],9:["🍇","a grape","2.3 cm","2 g"],
+ 10:["🌰","a date","3.1 cm","4 g"],11:["🟢","an amla","4.1 cm","7 g"],12:["🍋","a lime","5.4 cm","14 g"],
+ 13:["🫛","a pea pod","7.4 cm","23 g"],14:["🍋","a lemon","8.7 cm","43 g"],15:["🍎","an apple","10 cm","70 g"],
+ 16:["🍐","a guava","11.6 cm","100 g"],17:["🔴","a pomegranate","13 cm","140 g"],18:["🍠","a sweet potato","14 cm","190 g"],
+ 19:["🥭","a mango","15 cm","240 g"],20:["🍌","a banana","25.6 cm","300 g"],21:["🥕","a carrot","26.7 cm","360 g"],
+ 22:["🥒","a long cucumber","27.8 cm","430 g"],23:["🍊","a mosambi","28.9 cm","500 g"],24:["🌽","a corn cob","30 cm","600 g"],
+ 25:["🥦","a cauliflower","34.6 cm","660 g"],26:["🥬","a bunch of keerai","35.6 cm","760 g"],27:["🍆","a large brinjal","36.6 cm","875 g"],
+ 28:["🥥","a tender coconut","37.6 cm","1 kg"],29:["🎃","a small pumpkin","38.6 cm","1.15 kg"],30:["🥬","a cabbage","40 cm","1.3 kg"],
+ 31:["🍈","a musk melon","41 cm","1.5 kg"],32:["🥒","a bottle gourd","42.4 cm","1.7 kg"],33:["🍍","a pineapple","43.7 cm","1.9 kg"],
+ 34:["🍈","a papaya","45 cm","2.1 kg"],35:["🎃","an ash gourd","46 cm","2.4 kg"],36:["🍉","a small watermelon","47.4 cm","2.6 kg"],
+ 37:["🍉","a watermelon","48.6 cm","2.9 kg"],38:["🎃","a pumpkin","49.8 cm","3.1 kg"],39:["🍉","a big watermelon","50.7 cm","3.3 kg"],
+ 40:["🎃","a large pumpkin","51 cm","3.4 kg"]
+};
+const WEEK={
+ 4:"Implantation is done; the placenta and amniotic sac are forming.",
+ 5:"The neural tube — future brain and spinal cord — is forming.",
+ 6:"A heartbeat flicker may be visible on ultrasound.",
+ 7:"Arm and leg buds appear; the brain is growing fast.",
+ 8:"Fingers and toes begin to form. The baby moves, though far too small to feel.",
+ 9:"Facial features are taking shape.",
+ 10:"All vital organs are in place. From now on it’s called a fetus.",
+ 11:"Bones begin to harden; tooth buds form under the gums.",
+ 12:"Reflexes are developing — fingers can curl and open.",
+ 13:"Vocal cords form. The first trimester ends this week.",
+ 14:"Facial muscles work — squinting and frowning begin.",
+ 15:"Baby can sense light through closed eyelids.",
+ 16:"Eyes move side to side; the heart pumps about 25 litres of blood a day.",
+ 17:"Fat starts building under the skin; cartilage is turning to bone.",
+ 18:"Ears reach their final position — baby may start hearing sounds.",
+ 19:"A protective coating (vernix) covers the skin. First kicks may be felt soon.",
+ 20:"Halfway. Baby swallows amniotic fluid and practises digesting.",
+ 21:"Movements get stronger and more regular.",
+ 22:"Lips, eyebrows and eyelids are distinct; grip is getting stronger.",
+ 23:"Hearing sharpens. Talk and sing — baby is learning both your voices.",
+ 24:"Lungs are growing the branches that will carry air.",
+ 25:"Baby responds to familiar voices with movement.",
+ 26:"Eyes begin to open.",
+ 27:"Sleep and wake cycles start. The third trimester begins next week.",
+ 28:"Baby can blink; the brain is adding billions of neurons.",
+ 29:"Muscles and lungs keep maturing; kicks get stronger.",
+ 30:"Brain grows rapidly; bone marrow now makes red blood cells.",
+ 31:"All five senses are working.",
+ 32:"Most babies are head-down by now and practise breathing movements.",
+ 33:"Bones are hardening — except the skull, which stays soft for birth.",
+ 34:"Nervous system and lungs are maturing.",
+ 35:"Kidneys are fully developed.",
+ 36:"Baby may drop lower into the pelvis and gains about 30 g a day.",
+ 37:"Early term. Lungs are nearly ready.",
+ 38:"Practising sucking and grasping.",
+ 39:"Full term. The brain is still growing fast.",
+ 40:"Due date. Only about 1 in 20 babies arrive on it — the next two weeks are normal too."
+};
+const MONTHS=[
+ {id:"m1",name:"Month 1",range:"Weeks 1–4",wk:[0,4],
+  baby:"Fertilisation and implantation. By week 4 the embryo is a tiny cluster of cells settling into the uterus.",
+  mom:"Missed period, mild cramps, breast tenderness. Many women don’t know yet.",
+  tests:"Home test, then a doctor’s visit.",
+  tips:["Every date in pregnancy is counted from the first day of the last period — write it down."]},
+ {id:"m2",name:"Month 2",range:"Weeks 5–8",wk:[5,8],
+  baby:"The heart starts beating, the neural tube closes, and limb buds appear.",
+  mom:"Nausea, tiredness, frequent urination, food aversions. All normal.",
+  tests:"Dating/viability scan, first-trimester blood tests.",
+  tips:["For nausea: small frequent meals, a dry biscuit before getting up, ginger, avoid strong smells.","Can’t keep fluids down for 24 hours, or losing weight? That’s not ordinary morning sickness — see the doctor."]},
+ {id:"m3",name:"Month 3",range:"Weeks 9–13",wk:[9,13],
+  baby:"All major organs are formed. Fingers, toes and facial features are taking shape.",
+  mom:"Nausea usually peaks around 9–10 weeks and eases by 13–14. Mood swings are common.",
+  tests:"NT scan + double marker (11w–13w6d).",
+  tips:["Book the NT scan as soon as the dating scan is done — the window is strict."]},
+ {id:"m4",name:"Month 4",range:"Weeks 14–17",wk:[14,17],
+  baby:"Baby makes facial expressions, bones are hardening, sex organs are developing.",
+  mom:"Energy usually returns. The bump starts to show.",
+  tests:"Td vaccine, start iron and calcium as prescribed.",
+  tips:["Start sleeping on her side; it gets more important as the bump grows."]},
+ {id:"m5",name:"Month 5",range:"Weeks 18–22",wk:[18,22],
+  baby:"First movements (often 18–22 weeks for a first baby). Hearing develops.",
+  mom:"Backache, skin changes, sharp pulls on the sides of the bump (round ligament pain).",
+  tests:"Anomaly scan — the most important scan of the pregnancy.",
+  tips:["Iron-rich staples: ragi, keerai, dates, jaggery, dal, eggs, meat. Take iron with vitamin C, not with tea or coffee."]},
+ {id:"m6",name:"Month 6",range:"Weeks 23–27",wk:[23,27],
+  baby:"Lungs develop, eyes start to open, baby reacts to sound.",
+  mom:"Swollen feet, heartburn, leg cramps.",
+  tests:"Glucose tolerance test (OGTT), repeat Hb.",
+  tips:["Swollen feet in the evening is common. Sudden swelling of face or hands, with headache, is not — call the doctor."]},
+ {id:"m7",name:"Month 7",range:"Weeks 28–31",wk:[28,31],
+  baby:"Third trimester. Baby blinks, gains fat, has sleep cycles.",
+  mom:"Breathlessness, practice contractions (Braxton Hicks), poorer sleep.",
+  tests:"Visits every 2 weeks. Growth scan if advised. Daily kick counting.",
+  tips:["Keep snacks handy — blood-sugar dips cause dizziness."]},
+ {id:"m8",name:"Month 8",range:"Weeks 32–35",wk:[32,35],
+  baby:"Most babies turn head-down and gain about 200 g a week.",
+  mom:"Pelvic pressure, frequent urination returns, tiredness.",
+  tests:"Growth scan / Doppler if advised.",
+  tips:["Pre-fill the insurance pre-authorisation form with everything except the admission date."]},
+ {id:"m9",name:"Month 9",range:"Weeks 36–40",wk:[36,40],
+  baby:"Full term from 37 weeks. Lungs finish maturing; baby drops lower.",
+  mom:"Nesting urge, more practice contractions, signs of labour.",
+  tests:"Weekly visits, NST if advised.",
+  tips:["Keep the phone charged, the vehicle fuelled and the bag by the door."]},
+ {id:"birth",name:"Birth & 6 weeks",range:"After delivery",wk:[38,47],
+  baby:"Newborn: feeding every 2–3 hours, sleeping 16+ hours in short stretches.",
+  mom:"Recovery takes about 6 weeks (longer after a C-section). Bleeding (lochia) lasts up to 6 weeks.",
+  tests:"Baby’s birth vaccines and screening; mother’s 6-week check.",
+  tips:["Accept every offer of help. Put visitors to work, or postpone them."]},
+ {id:"baby",name:"Baby’s first year",range:"0–12 months",wk:[46,100],
+  baby:"Vaccines at birth, 6, 10, 14 weeks and 9 months. Exclusive breastfeeding to 6 months, then solids.",
+  mom:"",tests:"See More → Baby vaccines for dates worked out from the birth date.",
+  tips:["Register on U-WIN so vaccine records are digital and portable."]}
+];
+// cat: med, scan, admin, money, home, self, baby
+const TASKS=[
+ ["t_doc","m1","Book the first gynaecologist visit","Confirms and dates the pregnancy and starts supplements.",4,8,"med"],
+ ["t_folic","m1","Start folic acid","Daily, as prescribed, through at least week 12. It protects against neural-tube defects.",4,6,"med"],
+ ["t_habits","m1","Clean up habits","No alcohol, no smoking (including second-hand). Caffeine under about 200 mg a day — roughly two small filter coffees. Check every current medicine with the doctor.",4,8,"self"],
+ ["t_hosp","m2","Shortlist the delivery hospital","Check: NICU on site, 24×7 anaesthetist, travel time at night, cashless with your insurer, package costs for normal and C-section.",5,12,"admin"],
+ ["t_ins","m2","Check maternity cover in health insurance","Find the maternity sub-limit, waiting period, normal vs C-section limits, newborn cover from day 1, and how to add the baby. Ask HR for the group policy document.",5,10,"money"],
+ ["t_picme","m2","Register on PICME and get the RCH number","12-digit ID for the pregnancy in Tamil Nadu. Register at picme.tn.gov.in or through the doctor/urban health nurse. Scan centres and birth registration ask for it.",5,12,"admin"],
+ ["t_dating","m2","Dating / viability scan","Usually 6–9 weeks. Confirms heartbeat, location (rules out ectopic), number of babies and due date.",6,9,"scan"],
+ ["t_bloods","m2","First-trimester blood and urine tests","Usually Hb/CBC, blood group and Rh, sugar, thyroid (TSH), HIV, hepatitis B, syphilis, urine routine. If she’s Rh-negative, ask about anti-D.",6,12,"med"],
+ ["t_mcp","m2","Get the Mother & Child Protection (MCP) card","Government record of check-ups, vaccines and baby growth, from the UPHC or Anganwadi. Keep it alongside the private hospital file.",6,12,"admin"],
+ ["t_nt","m3","NT scan + double marker","Strict window: 11 weeks to 13 weeks 6 days. Screens for chromosomal conditions. Book ahead — slots fill.",11,13,"scan"],
+ ["t_tell","m3","Decide when to tell family and work","Many couples wait until after the NT scan result.",10,14,"self"],
+ ["t_leavepol","m3","Read both employers’ leave policies","Maternity leave is 26 weeks paid for the first two children. Paternity leave in the private sector is company policy only.",10,16,"admin"],
+ ["t_dental","m3","Dental check-up","Gum problems are common in pregnancy; the second trimester is the safest window for treatment.",9,20,"med"],
+ ["t_td1","m4","Td vaccine — dose 1","Protects mother and newborn against tetanus. If vaccinated in the last 3 years, one booster may be enough — the doctor decides.",13,20,"med"],
+ ["t_ifa","m4","Start iron and calcium","Usually from the second trimester, as prescribed. Take them at least 2 hours apart.",13,16,"med"],
+ ["t_quad","m4","Quadruple marker (only if the NT scan was missed)","15–20 weeks.",15,20,"scan"],
+ ["t_schemes","m4","Check scheme eligibility (PMMVY, Muthulakshmi Reddy)","See More → Schemes & rights. Check rather than assume either way.",12,20,"money"],
+ ["t_anomaly","m5","Anomaly scan (TIFFA / Level 2)","18–22 weeks; aim for 19–20. Detailed check of every organ. Do not miss this one.",18,22,"scan"],
+ ["t_td2","m5","Td vaccine — dose 2","4 weeks after dose 1.",17,24,"med"],
+ ["t_move","m5","Get the doctor’s OK for walking or prenatal yoga","Moderate activity helps sleep, back pain and blood sugar.",16,22,"self"],
+ ["t_matleave","m5","Fix maternity leave dates with HR","Up to 8 of the 26 weeks can be taken before the due date. Get it confirmed in writing.",18,26,"admin"],
+ ["t_ogtt","m6","Glucose tolerance test (OGTT)","24–28 weeks. Gestational diabetes is common in South Asian women — don’t skip it.",24,28,"med"],
+ ["t_hb2","m6","Repeat Hb / CBC","Anaemia is very common in Indian pregnancies and easy to fix if caught.",24,28,"med"],
+ ["t_class","m6","Book childbirth and breastfeeding classes","Most big hospitals run them. Both of you should attend.",22,28,"self"],
+ ["t_buys","m6","Plan big purchases","Cot, firm mattress, car seat, pram, and clothes for 0–3 months only — babies outgrow them fast.",24,32,"home"],
+ ["t_kicks","m7","Start daily kick counting","From 28 weeks — use the kick counter under More. Reduced movement means calling the doctor the same day.",28,40,"med"],
+ ["t_tdap","m7","Ask about Tdap and flu vaccines","Tdap at 27–36 weeks protects the newborn from whooping cough. Widely given privately.",27,32,"med"],
+ ["t_growth","m7","Growth scan / Doppler (if advised)","Usually 28–34 weeks.",28,34,"scan"],
+ ["t_prereg","m7","Pre-register at the hospital","Get the cashless pre-authorisation form, the insurer’s document list, and the package estimate in writing.",28,34,"money"],
+ ["t_valai","m7","Plan Valaikappu / Seemantham","If your family follows it — usually the 7th or 9th month. Ask the doctor about travel first.",26,34,"home"],
+ ["t_paed","m7","Choose a paediatrician","Check clinic hours, how to reach them in an emergency, and vaccine costs.",28,34,"admin"],
+ ["t_bag","m8","Pack the hospital bag","By 34–36 weeks. Checklist under More → Hospital bag.",32,36,"home"],
+ ["t_docs","m8","Make a documents folder","Aadhaar of both, insurance card and policy number, employee IDs, MCP card, PICME number, all reports in date order.",32,36,"admin"],
+ ["t_help","m8","Arrange help for the first 6 weeks","Who stays, who cooks, who takes night shifts. Decide now, not in week 39.",30,36,"home"],
+ ["t_route","m8","Plan the route to the hospital","Day and night routes, a backup vehicle, a cab app, 108 saved.",32,36,"home"],
+ ["t_carseat","m8","Install a rear-facing infant car seat","If you drive. Holding a newborn on a lap in a car is the most dangerous option.",32,37,"home"],
+ ["t_wash","m8","Wash baby clothes and set up the sleep space","Mild detergent, sun-dried. Firm flat mattress, nothing else in the cot.",32,37,"home"],
+ ["t_weekly","m9","Weekly check-ups","BP, urine, baby’s position, NST if advised.",36,40,"med"],
+ ["t_plan","m9","Discuss the birth plan and pain relief","Epidural availability, who can be in the labour room, delayed cord clamping, skin-to-skin, what would lead to a C-section.",34,38,"med"],
+ ["t_patleave","m9","Apply for paternity leave","Keep the start date flexible around the due date.",34,38,"admin"],
+ ["t_signs","m9","Learn the signs of labour","See Emergency and the contraction timer.",35,38,"self"],
+ ["b_vax","birth","Baby’s birth vaccines","BCG, OPV-0 and hepatitis B (within 24 hours) before discharge.",38,44,"baby"],
+ ["b_screen","birth","Newborn screening and hearing test","Ask the hospital before discharge.",38,42,"baby"],
+ ["b_reg","birth","Birth registration and certificate","The hospital reports the birth; collect the certificate. Registering within 21 days avoids late fees. The name can be added later — do it early.",39,45,"admin"],
+ ["b_ins","birth","Add baby to health insurance","Group policies usually allow a fixed window, often 30 days. Miss it and you may wait until renewal.",39,44,"money"],
+ ["b_claim","birth","File insurance claims","Reimbursement claims have deadlines, often 30 days from discharge.",40,44,"money"],
+ ["b_bf","birth","Breastfeeding support","Exclusive breastfeeding for 6 months is recommended. If the latch hurts, get a lactation consultant early.",39,46,"baby"],
+ ["b_uwin","birth","Register on U-WIN","Government digital vaccination record: uwin.mohfw.gov.in.",40,46,"baby"],
+ ["b_aadhaar","birth","Baal Aadhaar","At an Aadhaar centre with the birth certificate. No fingerprints until age 5.",40,52,"admin"],
+ ["b_ppd","birth","Watch for postpartum depression — in both of you","Low mood for more than 2 weeks, no sleep even when the baby sleeps, feeling detached. Tell the doctor; it’s common and treatable.",40,52,"self"],
+ ["b_6wk","birth","Mother’s 6-week postnatal check","BP, healing, mood, contraception.",44,47,"med"]
+].map(([id,m,t,d,s,e,cat])=>({id,m,t,d,s,e,cat}));
+const CATS={med:"Health",scan:"Scan",admin:"Paperwork",money:"Money",home:"Home",self:"Wellbeing",baby:"Baby",custom:"Mine"};
+const VAX=[
+ {k:"v0",age:"At birth",d:0,list:"BCG, OPV-0, Hepatitis B birth dose"},
+ {k:"v6",age:"6 weeks",d:42,list:"OPV-1, Pentavalent-1, Rotavirus-1, fIPV-1, PCV-1"},
+ {k:"v10",age:"10 weeks",d:70,list:"OPV-2, Pentavalent-2, Rotavirus-2"},
+ {k:"v14",age:"14 weeks",d:98,list:"OPV-3, Pentavalent-3, Rotavirus-3, fIPV-2, PCV-2"},
+ {k:"v9m",age:"9 months",mo:9,list:"MR-1, PCV booster, fIPV-3, Vitamin A (1st), JE-1 in endemic districts"},
+ {k:"v16m",age:"16–24 months",mo:16,list:"MR-2, DPT booster-1, OPV booster, Vitamin A (2nd), JE-2 in endemic districts"},
+ {k:"v5y",age:"5–6 years",mo:60,list:"DPT booster-2"}
+];
+const BAG={
+ "Documents":["Aadhaar (both)","Insurance card + policy number","MCP card and all reports","PICME / RCH number","Doctor’s and hospital numbers on paper"],
+ "For her":["3–4 front-opening nighties","Maternity pads (2 packs)","Disposable underwear","2 nursing bras","Slippers","Toiletries, lip balm, hair ties","Shawl or dupatta","Water bottle with straw","Snacks","Long phone-charging cable"],
+ "For baby":["4–5 soft cotton jablas","Caps, mittens, socks","2–3 swaddle cloths","Newborn diapers","Cotton nappies","Water-based wipes","Soft blanket","Going-home outfit"],
+ "For him":["Change of clothes","Power bank","Cash and UPI ready","Snacks","List of people to call"]
+};
+const TAGS=["Nausea","Tired","Heartburn","Back pain","Headache","Cramps","Swelling","Cravings","Poor sleep","Happy","Anxious","Kicks!"];
+const MOODS=["😄","🙂","😐","😣","😢","🤢","😴"];
+const PROMPTS=["What made you smile today?","What are you craving, and what can’t you stand?","Write a few lines to the baby.","What worried you this week, and what helped?","What does each of you want to remember about this week?","What surprised you about this week?"];
+
+/* ================= STATE ================= */
+const KEY="thottil.v1";
+const DEF={profile:{},tasks:{},custom:[],journal:[],weights:[],bp:[],appts:[],meds:{list:["Folic acid","Iron","Calcium"],log:{}},kicks:[],kickLive:null,contr:[],bag:{},vax:{},lastBackup:null};
+const clone=o=>JSON.parse(JSON.stringify(o));
+let S=load();
+function load(){try{const r=localStorage.getItem(KEY);return r?Object.assign(clone(DEF),JSON.parse(r)):clone(DEF)}catch(e){return clone(DEF)}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));return true}catch(e){toast("Storage is full. Export a backup, then delete some journal photos.");return false}}
+const U={tab:"home",sub:null,month:null,filter:"now",draft:null};
+
+/* ================= HELPERS ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const DAY=864e5;
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const parse=s=>{if(!s)return null;const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const fmt=(d,o)=>d.toLocaleDateString("en-IN",o||{day:"numeric",month:"short",year:"numeric"});
+const fmtS=d=>d.toLocaleDateString("en-IN",{day:"numeric",month:"short"});
+const addD=(d,n)=>new Date(d.getTime()+n*DAY);
+const addM=(d,n)=>{const x=new Date(d);x.setMonth(x.getMonth()+n);return x};
+const daysBetween=(a,b)=>Math.round((b-a)/DAY);
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const plural=(n,w)=>`${n} ${w}${n===1?"":"s"}`;
+
+function preg(){
+  const p=S.profile;
+  let lmp=p.edd?addD(parse(p.edd),-280):parse(p.lmp);
+  if(!lmp)return null;
+  const days=daysBetween(lmp,today());
+  const edd=addD(lmp,280);
+  return {lmp,edd,days,week:Math.floor(days/7),day:((days%7)+7)%7,left:daysBetween(today(),edd)};
+}
+function babyAge(){const d=parse(S.profile.dob);if(!d)return null;const days=daysBetween(d,today());return {dob:d,days,week:Math.floor(days/7),day:days%7}}
+// effective timeline week for tasks (continues past birth)
+function gw(){const b=babyAge();if(b)return 40+b.days/7;const p=preg();return p?p.days/7:null}
+function monthFor(w){if(w==null)return"m1";if(S.profile.dob){const b=babyAge();return b.days>42?"baby":"birth"}for(const m of MONTHS.slice(0,9))if(w<=m.wk[1]+.99)return m.id;return w<42?"m9":"birth"}
+function allTasks(){return TASKS.concat(S.custom.map(c=>({id:c.id,m:c.m,t:c.t,d:c.d||"",s:null,e:null,cat:"custom"})))}
+function status(t){
+  if(S.tasks[t.id])return"done";
+  const w=gw();
+  if(t.s==null){const m=MONTHS.find(x=>x.id===t.m);if(!m||w==null)return"later";if(w>m.wk[1]+1)return"over";if(w>=m.wk[0]-1)return"now";return"later"}
+  if(w==null)return"later";
+  if(w>t.e+1)return"over";
+  if(w>=t.s-1)return"now";
+  return"later";
+}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("show"),2600)}
+function openSheet(html){$("#panel").innerHTML='<div class="grab"></div>'+html;$("#sheet").classList.add("open");document.body.style.overflow="hidden"}
+function closeSheet(){$("#sheet").classList.remove("open");document.body.style.overflow="";U.draft=null}
+function val(id){const e=document.getElementById(id);return e?e.value.trim():""}
+
+/* ================= RENDER ================= */
+function render(scrollTop){
+  const fn={home:vHome,guide:vGuide,tasks:vTasks,journal:vJournal,more:vMore}[U.tab];
+  $("#view").innerHTML=U.tab==="more"&&U.sub?vSub():fn();
+  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===U.tab));
+  if(scrollTop)window.scrollTo(0,0);
+  if(U.tab==="guide"){const c=document.querySelector(".chip.on");if(c)c.scrollIntoView({inline:"center",block:"nearest"})}
+}
+
+function garland(filled,nowIdx){
+  let s="";const cx=150,cy=150,r=126;
+  for(let i=1;i<=40;i++){
+    const a=(-90+(i-1)*9)*Math.PI/180,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+    const tri=(i===14||i===28);
+    let cls="bead"+(i<=filled?" on":"")+(i===nowIdx?" now":"")+(tri&&i>filled?" tri":"");
+    s+=`<circle class="${cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${tri?8:6.5}"/>`;
+  }
+  return `<svg class="garland" viewBox="0 0 300 300" role="img" aria-label="${filled} of 40 weeks">${s}</svg>`;
+}
+
+function welcome(){
+  return `<div class="card" style="margin-top:8px">
+    <h1>Congratulations to you both.</h1>
+    <p class="muted" style="margin-top:10px">Thottil tracks the pregnancy week by week, tells you what to do and when, and keeps your journal, logs and paperwork in one place. Everything stays on this phone.</p>
+    <p style="margin-top:12px">Start with one date:</p>
+    <label class="field"><span>Due date</span><input type="date" id="w_edd"><em>From the doctor or the dating scan — most accurate.</em></label>
+    <label class="field"><span>Or: first day of last period</span><input type="date" id="w_lmp"></label>
+    <label class="field"><span>Mother’s name (optional)</span><input type="text" id="w_mom" autocomplete="off"></label>
+    <div class="actions"><button class="btn block" data-a="welcomeSave">Start tracking</button></div>
+  </div>
+  <div class="card flat small">Already have a backup file? <button class="link" data-a="import">Restore it</button></div>`;
+}
+
+function vHome(){
+  const p=preg();const b=babyAge();
+  if(!p&&!b)return welcome();
+  let h="";
+  const name=S.profile.mom?esc(S.profile.mom):"";
+  if(b){
+    h+=`<section class="hero">${garland(40,0)}
+      <div class="hero-center"><div class="big">${b.week}</div><div class="big-sub">${b.week===1?"week":"weeks"} ${b.day?`${plural(b.day,"day")} `:""}old</div></div>
+      <div class="hero-meta"><div><b>${fmt(b.dob,{day:"numeric",month:"short"})}</b><span>Born</span></div><div><b>${plural(b.days,"day")}</b><span>With you</span></div></div></section>`;
+  }else{
+    const w=p.week;
+    h+=`<section class="hero">${garland(clamp(w,0,40),w<40?w+1:0)}
+      <div class="hero-center"><div class="big">${Math.max(w,0)}</div><div class="big-sub">${w===1?"week":"weeks"}${p.day?`, ${plural(p.day,"day")}`:""}</div></div>
+      <div class="hero-meta">
+        <div><b>${p.left>=0?p.left:"+"+(-p.left)}</b><span>${p.left>=0?"Days to go":"Days past due"}</span></div>
+        <div><b>${fmtS(p.edd)}</b><span>Due date</span></div>
+        <div><b>${w<14?"1st":w<28?"2nd":"3rd"}</b><span>Trimester</span></div>
+      </div></section>`;
+    const k=clamp(w,4,40);
+    if(w>=3){const z=SIZE[k];
+      h+=`<div class="card"><div class="size"><div class="emo" aria-hidden="true">${z[0]}</div><div>
+        <h3>About the size of ${z[1]}</h3><div class="muted small">${z[2]}${z[3]?` long, about ${z[3]}`:""}</div></div></div>
+        <p style="margin-top:12px">${WEEK[k]}</p></div>`;
+    }
+  }
+  // alerts
+  const lastBp=S.bp[S.bp.length-1];
+  if(lastBp&&(lastBp.sys>=140||lastBp.dia>=90)&&daysBetween(parse(lastBp.date),today())<=2)
+    h+=`<div class="card warn"><h3>Last BP was ${lastBp.sys}/${lastBp.dia}</h3><p class="small" style="margin-top:4px">140/90 or higher in pregnancy needs the doctor today. With headache, blurred vision or upper-belly pain, go to the hospital.</p></div>`;
+  if(S.kickLive)h+=`<div class="card warn"><div class="row between"><div><h3>Kick count running</h3><div class="small muted">${S.kickLive.count} so far</div></div><button class="btn sm" data-a="go" data-v="kicks">Open</button></div></div>`;
+  // quick
+  h+=`<div class="quick">
+    <button data-a="journalNew"><span class="qi">✍️</span>Journal</button>
+    <button data-a="go" data-v="weight"><span class="qi">⚖️</span>Weight</button>
+    <button data-a="go" data-v="bp"><span class="qi">🩺</span>BP</button>
+    <button data-a="go" data-v="${p&&p.week>=28&&!b?"kicks":"appts"}"><span class="qi">${p&&p.week>=28&&!b?"👣":"📅"}</span>${p&&p.week>=28&&!b?"Kicks":"Visits"}</button></div>`;
+  // meds
+  if(S.meds.list.length){
+    const t=iso(today()),log=S.meds.log[t]||[];
+    h+=`<div class="card"><div class="row between"><h2 style="margin:0">Today’s tablets</h2><span class="small muted">${streak()}</span></div>
+      ${S.meds.list.map(m=>`<label class="task"><input type="checkbox" class="chk" data-c="med" data-v="${esc(m)}" ${log.includes(m)?"checked":""}><div class="t" style="margin-top:2px">${esc(m)}</div></label>`).join("")}</div>`;
+  }
+  // next appt
+  const nx=S.appts.filter(a=>a.date>=iso(today())).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))[0];
+  h+=`<div class="card"><div class="row between"><h2 style="margin:0">Next visit</h2><button class="link" data-a="apptNew">Add</button></div>
+    ${nx?`<div style="margin-top:8px"><b>${esc(nx.title)}</b><div class="muted small">${fmt(parse(nx.date),{weekday:"short",day:"numeric",month:"short"})}${nx.time?`, ${esc(nx.time)}`:""}${nx.where?` at ${esc(nx.where)}`:""}</div>${nx.q?`<div class="small" style="margin-top:6px;white-space:pre-wrap"><b>To ask:</b> ${esc(nx.q)}</div>`:""}</div>`
+      :`<p class="muted small" style="margin-top:6px">Nothing booked. Add the next check-up or scan so you don’t miss it.</p>`}</div>`;
+  // tasks now
+  const now=allTasks().filter(t=>{const s=status(t);return s==="now"||s==="over"}).sort((a,b)=>(status(a)==="over"?-1:0)-(status(b)==="over"?-1:0)||(a.e??99)-(b.e??99));
+  h+=`<div class="card"><div class="row between"><h2 style="margin:0">Do now</h2><button class="link" data-a="tab" data-v="tasks">All tasks</button></div>
+    ${now.length?now.slice(0,6).map(taskRow).join(""):`<p class="muted small" style="margin-top:6px">You’re all caught up for this stage.</p>`}
+    ${now.length>6?`<p class="small muted" style="margin-top:8px">${now.length-6} more in To-do.</p>`:""}</div>`;
+  // backup nudge
+  const has=S.journal.length+S.weights.length+Object.keys(S.tasks).length>0;
+  const lb=S.lastBackup?daysBetween(parse(S.lastBackup),today()):999;
+  if(has&&lb>14)h+=`<div class="card flat"><h3>Back up your data</h3><p class="small" style="margin-top:4px">Everything lives only in this browser. Clearing browser data or losing the phone erases it. ${S.lastBackup?`Last backup was ${plural(lb,"day")} ago.`:"You haven’t made a backup yet."}</p><button class="btn sm" style="margin-top:10px" data-a="export">Export backup</button></div>`;
+  return h;
+}
+function streak(){let n=0,d=today();const all=S.meds.list;while(true){const l=S.meds.log[iso(d)]||[];if(all.every(m=>l.includes(m))){n++;d=addD(d,-1)}else break}return n?`${plural(n,"day")} in a row`:""}
+
+function taskRow(t){
+  const s=status(t);
+  const range=t.s!=null?`Weeks ${t.s}–${t.e}`:"";
+  return `<label class="task ${s==="done"?"done":""}">
+    <input type="checkbox" class="chk" data-c="task" data-v="${t.id}" ${s==="done"?"checked":""}>
+    <div><div class="t">${esc(t.t)}</div>${t.d?`<div class="d">${esc(t.d)}</div>`:""}
+    <div>${s==="over"?'<span class="tag over">Overdue</span>':s==="now"?'<span class="tag now">Now</span>':""}${range&&t.m!=="birth"?`<span class="tag">${range}</span>`:""}<span class="tag cat">${CATS[t.cat]}</span>${t.cat==="custom"?`<button class="tag" data-a="delCustom" data-v="${t.id}">Delete</button>`:""}</div></div></label>`;
+}
+
+function vGuide(){
+  const cur=monthFor(gw());
+  const sel=U.month||cur;
+  const m=MONTHS.find(x=>x.id===sel);
+  let h=`<h1 style="margin:6px 0 12px">Month by month</h1><div class="chips">${MONTHS.map(x=>`<button class="chip ${x.id===sel?"on":""} ${x.id===cur?"here":""}" data-a="month" data-v="${x.id}">${x.name}</button>`).join("")}</div>`;
+  h+=`<div class="card"><div class="muted small">${m.range}${m.id===cur?", you are here":""}</div>
+    <h3 style="margin-top:10px">Baby</h3><p>${m.baby}</p>
+    ${m.mom?`<h3 style="margin-top:12px">Mother</h3><p>${m.mom}</p>`:""}
+    <h3 style="margin-top:12px">Tests and visits</h3><p>${m.tests}</p></div>`;
+  if(m.wk[1]<=40&&m.id.startsWith("m")){
+    const weeks=[];for(let w=Math.max(4,m.wk[0]);w<=m.wk[1];w++)weeks.push(w);
+    if(weeks.length)h+=`<div class="card"><h2>Week by week</h2>${weeks.map(w=>`<div class="li" style="align-items:flex-start"><div style="font-size:26px;line-height:1">${SIZE[w][0]}</div><div style="flex:1"><b>Week ${w}</b> <span class="muted small">${SIZE[w][1]}</span><div class="small">${WEEK[w]}</div></div></div>`).join("")}</div>`;
+  }
+  const ts=allTasks().filter(t=>t.m===sel);
+  const done=ts.filter(t=>S.tasks[t.id]).length;
+  h+=`<div class="card"><div class="row between"><h2 style="margin:0">Checklist</h2><span class="small muted">${done} of ${ts.length}</span></div>${ts.map(taskRow).join("")}
+    <button class="btn ghost sm" style="margin-top:12px" data-a="customNew" data-v="${sel}">Add your own task</button></div>`;
+  if(sel==="baby")h+=`<div class="card"><h2>Vaccines</h2>${VAX.map(v=>`<div class="li"><b>${v.age}</b><span class="small r">${v.list}</span></div>`).join("")}<button class="btn ghost sm" style="margin-top:10px" data-a="go" data-v="vaccines">Track with dates</button></div>`;
+  if(m.tips.length)h+=`<div class="card flat"><h3>Tips</h3><ul class="b" style="margin-top:6px">${m.tips.map(t=>`<li>${t}</li>`).join("")}</ul></div>`;
+  return h;
+}
+
+function vTasks(){
+  const all=allTasks();
+  const done=all.filter(t=>S.tasks[t.id]).length;
+  const f=U.filter;
+  let list=all.filter(t=>{const s=status(t);return f==="all"?true:f==="now"?(s==="now"||s==="over"):f==="later"?s==="later":s==="done"});
+  let h=`<h1 style="margin:6px 0 12px">To-do</h1>
+    <div class="card"><div class="row between"><b>${done} of ${all.length} done</b><span class="small muted">${Math.round(done/all.length*100)}%</span></div><div class="bar" style="margin-top:8px"><i style="width:${done/all.length*100}%"></i></div></div>
+    <div class="seg" style="margin-top:14px">${[["now","Now"],["later","Later"],["done","Done"],["all","All"]].map(([k,l])=>`<button class="${f===k?"on":""}" data-a="filter" data-v="${k}">${l}</button>`).join("")}</div>`;
+  if(!list.length)h+=`<div class="empty"><span class="qi">${f==="done"?"🌱":"✅"}</span>${f==="now"?"Nothing due right now.":f==="done"?"Ticked tasks will show here.":"Nothing here."}</div>`;
+  else{
+    const groups={};list.forEach(t=>{(groups[t.m]=groups[t.m]||[]).push(t)});
+    MONTHS.forEach(m=>{if(groups[m.id])h+=`<div class="card"><h2>${m.name} <span class="muted small" style="font-family:var(--fb);font-weight:400">${m.range}</span></h2>${groups[m.id].map(taskRow).join("")}</div>`});
+  }
+  h+=`<button class="btn ghost block" style="margin-top:14px" data-a="customNew" data-v="${monthFor(gw())}">Add your own task</button>`;
+  return h;
+}
+
+function vJournal(){
+  const p=PROMPTS[Math.floor(today()/DAY)%PROMPTS.length];
+  let h=`<h1 style="margin:6px 0 12px">Journal</h1>
+    <button class="card" style="width:100%;text-align:left;display:block" data-a="journalNew"><div class="muted small">Today’s prompt</div><div style="font:700 18px/1.3 var(--fd);margin-top:4px">${p}</div><div class="link" style="margin-top:10px">Write an entry</div></button>`;
+  if(!S.journal.length)return h+`<div class="empty"><span class="qi">📖</span>Entries, moods, symptoms and bump photos will collect here — a record you’ll be glad to have later.</div>`;
+  const js=[...S.journal].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+  h+=js.map(j=>{
+    const wk=weekOn(j.date);
+    return `<article class="entry">${j.photo?`<img src="${j.photo}" alt="Journal photo" loading="lazy">`:""}<div class="in">
+      <div class="row between"><div class="when">${fmt(parse(j.date),{weekday:"short",day:"numeric",month:"short",year:"numeric"})}${wk!=null?`, week ${wk}`:""}</div><div style="font-size:24px">${j.mood||""}</div></div>
+      ${j.tags&&j.tags.length?`<div>${j.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`:""}
+      ${j.text?`<div class="txt">${esc(j.text)}</div>`:""}
+      <button class="link" style="margin-top:8px" data-a="journalEdit" data-v="${j.id}">Edit</button></div></article>`}).join("");
+  return h;
+}
+function weekOn(ds){const p=preg();if(!p)return null;const w=Math.floor(daysBetween(p.lmp,parse(ds))/7);return w>=0&&w<=42?w:null}
+
+function vMore(){
+  const t=(v,i,b,s)=>`<button class="tile" data-a="go" data-v="${v}"><span class="qi">${i}</span><b>${b}</b><span>${s}</span></button>`;
+  return `<h1 style="margin:6px 0 4px">More</h1>
+  <div class="tiles">
+    ${t("appts","📅","Visits & scans","Appointments and questions to ask")}
+    ${t("meds","💊","Tablets","Daily supplement checklist")}
+    ${t("weight","⚖️","Weight","Log and healthy range")}
+    ${t("bp","🩺","Blood pressure","Log with warning flags")}
+    ${t("kicks","👣","Kick counter","Daily from 28 weeks")}
+    ${t("contr","⏱️","Contraction timer","When to leave for hospital")}
+    ${t("schemes","🏛️","Schemes & rights","Government benefits, leave, documents")}
+    ${t("bag","🧳","Hospital bag","Packing checklist")}
+    ${t("food","🍛","Food guide","Eat, limit, avoid")}
+    ${t("vaccines","💉","Baby vaccines","Schedule from birth date")}
+    ${t("warn","🚨","Warning signs","When to call or go")}
+    ${t("profile","⚙️","Details & backup","Dates, contacts, export")}
+  </div>`;
+}
+
+function vSub(){
+  const back=`<button class="back" data-a="back">‹ More</button>`;
+  const f={appts:sAppts,meds:sMeds,weight:sWeight,bp:sBp,kicks:sKicks,contr:sContr,schemes:sSchemes,bag:sBag,food:sFood,vaccines:sVax,warn:sWarn,profile:sProfile}[U.sub];
+  return back+(f?f():"");
+}
+
+function sAppts(){
+  const t=iso(today());
+  const up=S.appts.filter(a=>a.date>=t).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const past=S.appts.filter(a=>a.date<t).sort((a,b)=>b.date.localeCompare(a.date));
+  const row=a=>`<div class="li" style="align-items:flex-start"><div><b>${esc(a.title)}</b><div class="small muted">${fmt(parse(a.date),{weekday:"short",day:"numeric",month:"short"})}${a.time?`, ${esc(a.time)}`:""}${a.where?` at ${esc(a.where)}`:""}</div>${a.q?`<div class="small" style="white-space:pre-wrap;margin-top:4px"><b>Ask:</b> ${esc(a.q)}</div>`:""}${a.notes?`<div class="small" style="white-space:pre-wrap;margin-top:4px"><b>Notes:</b> ${esc(a.notes)}</div>`:""}</div><button class="link" data-a="apptEdit" data-v="${a.id}">Edit</button></div>`;
+  return `<h1>Visits & scans</h1><button class="btn block" style="margin-top:14px" data-a="apptNew">Add appointment</button>
+   <div class="card"><h2>Upcoming</h2>${up.length?up.map(row).join(""):'<p class="muted small">Nothing booked.</p>'}</div>
+   ${past.length?`<div class="card"><h2>Past</h2>${past.map(row).join("")}</div>`:""}
+   <div class="card flat small"><b>Typical visit rhythm:</b> monthly until 28 weeks, every 2 weeks until 36, then weekly. Write questions here as they come up — you will forget them in the clinic.</div>`;
+}
+function sMeds(){
+  const t=iso(today()),log=S.meds.log[t]||[];
+  const days=[];for(let i=13;i>=0;i--){const d=addD(today(),-i);const l=S.meds.log[iso(d)]||[];days.push({d,ok:S.meds.list.length&&S.meds.list.every(m=>l.includes(m)),some:l.length>0})}
+  return `<h1>Tablets</h1>
+   <div class="card"><h2>Today</h2>${S.meds.list.map(m=>`<label class="task"><input type="checkbox" class="chk" data-c="med" data-v="${esc(m)}" ${log.includes(m)?"checked":""}><div class="t" style="flex:1;margin-top:2px">${esc(m)}</div></label>`).join("")||'<p class="muted small">No tablets added.</p>'}</div>
+   <div class="card"><h2>Last 14 days</h2><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px">${days.map(x=>`<div style="text-align:center"><div style="width:30px;height:30px;margin:0 auto;border-radius:50%;background:${x.ok?"var(--leaf)":x.some?"var(--turmeric)":"var(--surface2)"}"></div><div class="small muted">${x.d.getDate()}</div></div>`).join("")}</div></div>
+   <div class="card"><h2>Edit list</h2>${S.meds.list.map((m,i)=>`<div class="li"><span>${esc(m)}</span><button class="link" data-a="medDel" data-v="${i}">Remove</button></div>`).join("")}
+   <div class="row" style="margin-top:10px"><input type="text" id="medNew" placeholder="e.g. Vitamin D"><button class="btn sm" data-a="medAdd">Add</button></div></div>
+   <div class="card flat small">Take iron and calcium at least 2 hours apart; iron absorbs better with vitamin C (lime, amla, orange) and worse with tea or coffee. Doses are your doctor’s call — this list only tracks them.</div>`;
+}
+function chart(points,lbl){
+  if(points.length<2)return"";
+  const W=320,H=150,P=26;const ys=points.map(p=>p.y);let lo=Math.min(...ys),hi=Math.max(...ys);if(hi-lo<2){hi+=1;lo-=1}
+  const x=i=>P+(W-P-8)*i/(points.length-1),y=v=>H-18-(H-30)*(v-lo)/(hi-lo);
+  const d=points.map((p,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(p.y).toFixed(1)}`).join("");
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line class="gd" x1="${P}" x2="${W}" y1="${y(hi)}" y2="${y(hi)}"/><line class="gd" x1="${P}" x2="${W}" y1="${y(lo)}" y2="${y(lo)}"/>
+   <text x="0" y="${y(hi)+4}">${hi.toFixed(0)}</text><text x="0" y="${y(lo)+4}">${lo.toFixed(0)}</text>
+   <path class="ln" d="${d}"/>${points.map((p,i)=>`<circle class="pt" cx="${x(i)}" cy="${y(p.y)}" r="3.5"/>`).join("")}</svg>`;
+}
+function bmiRange(){const h=parseFloat(S.profile.height),w=parseFloat(S.profile.preWeight);if(!h||!w)return null;const bmi=w/((h/100)**2);
+  const r=bmi<18.5?[12.5,18,"underweight"]:bmi<25?[11.5,16,"normal"]:bmi<30?[7,11.5,"overweight"]:[5,9,"obese"];return{bmi,lo:r[0],hi:r[1],cat:r[2]}}
+function sWeight(){
+  const ws=[...S.weights].sort((a,b)=>a.date.localeCompare(b.date));
+  const r=bmiRange();const last=ws[ws.length-1];
+  const gain=last&&S.profile.preWeight?(last.kg-parseFloat(S.profile.preWeight)):null;
+  return `<h1>Weight</h1>
+   <div class="card"><div class="row" style="gap:10px"><label class="field" style="flex:1;margin:0"><span>Date</span><input type="date" id="wDate" value="${iso(today())}"></label><label class="field" style="flex:1;margin:0"><span>Kg</span><input type="number" step="0.1" inputmode="decimal" id="wKg"></label></div><button class="btn block" style="margin-top:12px" data-a="wAdd">Save weight</button></div>
+   ${r?`<div class="card"><div class="row between"><div><div class="small muted">Gained so far</div><div class="pill" style="font-size:26px">${gain!=null?(gain>=0?"+":"")+gain.toFixed(1)+" kg":"—"}</div></div><div class="r"><div class="small muted">Typical total for BMI ${r.bmi.toFixed(1)}</div><div class="pill" style="font-size:20px">${r.lo}–${r.hi} kg</div></div></div><p class="small muted" style="margin-top:8px">Most of the gain comes after 20 weeks, roughly 0.3–0.5 kg a week for a normal BMI. A jump of more than 1 kg in a week late in pregnancy is worth mentioning to the doctor (fluid retention).</p></div>`
+     :`<div class="card flat small">Add height and pre-pregnancy weight in <button class="link" data-a="go" data-v="profile">Details</button> to see the healthy gain range.</div>`}
+   ${ws.length>1?`<div class="card"><h2>Trend</h2>${chart(ws.map(w=>({y:w.kg})))}</div>`:""}
+   <div class="card"><h2>Log</h2>${ws.length?[...ws].reverse().map(w=>`<div class="li"><span>${fmt(parse(w.date))}</span><span class="row"><b class="pill">${w.kg} kg</b><button class="link" data-a="wDel" data-v="${w.id}">✕</button></span></div>`).join(""):'<p class="muted small">No entries yet.</p>'}</div>`;
+}
+function bpFlag(s,d){if(s>=160||d>=110)return["bad","Severe — go to hospital"];if(s>=140||d>=90)return["bad","High — call the doctor today"];if(s<90||d<60)return["","Low — mention to doctor if dizzy"];return["ok","Normal range"]}
+function sBp(){
+  const bs=[...S.bp].sort((a,b)=>a.date.localeCompare(b.date));
+  return `<h1>Blood pressure</h1>
+   <div class="card"><label class="field" style="margin-top:0"><span>Date</span><input type="date" id="bDate" value="${iso(today())}"></label>
+   <div class="row" style="gap:10px"><label class="field" style="flex:1"><span>Top (systolic)</span><input type="number" inputmode="numeric" id="bSys"></label><label class="field" style="flex:1"><span>Bottom (diastolic)</span><input type="number" inputmode="numeric" id="bDia"></label></div>
+   <button class="btn block" style="margin-top:12px" data-a="bAdd">Save reading</button></div>
+   <div class="card flat small">High BP after 20 weeks can signal pre-eclampsia, which is dangerous and often silent. 140/90 or higher: call the doctor the same day. 160/110 or higher, or any high reading with headache, blurred vision, upper-belly pain or sudden swelling: go to the hospital.</div>
+   ${bs.length>1?`<div class="card"><h2>Systolic trend</h2>${chart(bs.map(b=>({y:b.sys})))}</div>`:""}
+   <div class="card"><h2>Readings</h2>${bs.length?[...bs].reverse().map(b=>{const f=bpFlag(b.sys,b.dia);return `<div class="li"><div><b class="pill">${b.sys}/${b.dia}</b><div class="small ${f[0]}">${f[1]}</div></div><span class="row"><span class="small muted">${fmtS(parse(b.date))}</span><button class="link" data-a="bDel" data-v="${b.id}">✕</button></span></div>`}).join(""):'<p class="muted small">No readings yet.</p>'}</div>`;
+}
+function sKicks(){
+  const L=S.kickLive;
+  let h=`<h1>Kick counter</h1>`;
+  if(L){const mins=Math.floor((Date.now()-L.start)/60000);
+    h+=`<button class="counter" data-a="kick" aria-label="Add a movement">${L.count}<small>tap for each movement</small></button>
+      <p class="muted" style="text-align:center;margin-top:12px">${plural(mins,"minute")} since start${L.count>=10?" — 10 reached, you can stop.":""}</p>
+      <div class="actions"><button class="btn ghost" data-a="kickUndo">Undo</button><button class="btn" data-a="kickStop">Finish and save</button></div>
+      ${mins>=120&&L.count<10?`<div class="card warn"><h3>Fewer than 10 movements in 2 hours</h3><p class="small" style="margin-top:4px">Call the doctor or go to the labour ward now. Don’t wait until tomorrow.</p></div>`:""}`;
+  }else h+=`<div class="card"><p>Pick a time when the baby is usually active (often after a meal). She lies on her left side and you count every kick, roll or flutter until you reach 10.</p><button class="btn block" style="margin-top:12px" data-a="kickStart">Start counting</button></div>`;
+  h+=`<div class="card flat small">Rule of thumb: 10 movements within 2 hours. More important than any number is a change from the baby’s usual pattern — reduced movement means calling the doctor the same day. It is not normal for movements to slow down near the due date.</div>`;
+  if(S.kicks.length)h+=`<div class="card"><h2>History</h2>${[...S.kicks].reverse().slice(0,20).map(k=>`<div class="li"><span>${fmt(new Date(k.start),{day:"numeric",month:"short"})}, ${new Date(k.start).toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit"})}</span><b class="pill">${k.count} in ${Math.max(1,Math.round((k.end-k.start)/60000))} min</b></div>`).join("")}</div>`;
+  return h;
+}
+function sContr(){
+  const C=S.contr;const live=C.length&&!C[C.length-1].e;
+  const fin=C.filter(c=>c.e);const last=fin.slice(-6);
+  const recent=fin.filter(c=>Date.now()-c.s<3600000);
+  let avgInt=null,avgDur=null;
+  if(recent.length>=3){const ints=[];for(let i=1;i<recent.length;i++)ints.push(recent[i].s-recent[i-1].s);avgInt=ints.reduce((a,b)=>a+b,0)/ints.length/60000;avgDur=recent.reduce((a,c)=>a+(c.e-c.s),0)/recent.length/1000}
+  const go=avgInt&&avgInt<=5.5&&avgDur>=45&&recent.length>=8;
+  const mmss=ms=>{const s=Math.round(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`};
+  return `<h1>Contraction timer</h1>
+   <button class="counter" style="font-size:30px;background:${live?"var(--lotus)":"var(--plum)"}" data-a="contr">${live?"Stop":"Start"}<small>${live?"tap when it ends":"tap when one begins"}</small></button>
+   ${avgInt?`<div class="card ${go?"warn":""}"><div class="grid2"><div><div class="small muted">Average gap (last hour)</div><div class="pill" style="font-size:24px">${avgInt.toFixed(1)} min</div></div><div><div class="small muted">Average length</div><div class="pill" style="font-size:24px">${Math.round(avgDur)} s</div></div></div>${go?'<p style="margin-top:10px"><b>This matches the usual “time to go” pattern.</b> Call the hospital and leave.</p>':""}</div>`:""}
+   ${last.length?`<div class="card"><h2>Recent</h2>${[...last].reverse().map((c,i,arr)=>{const prev=fin[fin.indexOf(c)-1];return `<div class="li"><span>${new Date(c.s).toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit"})}</span><span class="small">lasted <b>${mmss(c.e-c.s)}</b>${prev?`, gap <b>${mmss(c.s-prev.s)}</b>`:""}</span></div>`}).join("")}<button class="link" style="margin-top:8px" data-a="contrClear">Clear all</button></div>`:""}
+   <div class="card flat small"><b>First baby, common guide (5-1-1):</b> contractions about 5 minutes apart, each lasting about 1 minute, for 1 hour — leave for the hospital. Follow your own doctor’s instruction if it differs.<br><br><b>Go immediately, regardless of timing,</b> if the waters break, there’s bleeding, the baby moves less, or contractions start before 37 weeks.</div>`;
+}
+function sSchemes(){
+  return `<h1>Schemes & rights</h1>
+  <p class="muted small" style="margin-top:8px">Checked October 2026 for Tamil Nadu. Rules and amounts change — confirm on the official site before applying.</p>
+  <div class="card scheme"><div class="hd"><h3>PICME registration (Tamil Nadu)</h3><span class="tag now">Everyone</span></div>
+   <dl><dt>What</dt><dd>A 12-digit pregnancy ID (RCH number) that links check-ups, scans, delivery and the birth certificate.</dd>
+   <dt>How</dt><dd>Self-register at picme.tn.gov.in, or through the doctor or the urban health nurse at the nearest UPHC.</dd></dl>
+   <div class="verdict">Do this early. Scan centres in Tamil Nadu ask for it, and it feeds the birth certificate.</div>
+   <a class="btn ghost sm" style="margin-top:10px" href="https://picme.tn.gov.in" target="_blank" rel="noopener">Open PICME</a></div>
+
+  <div class="card scheme"><div class="hd"><h3>Dr. Muthulakshmi Reddy Maternity Benefit</h3><span class="tag">Low-income</span></div>
+   <dl><dt>What</dt><dd>₹18,000 in total — cash instalments plus two nutrition kits — for the first two deliveries. Mother must be 19 or older.</dd></dl>
+   <table class="t">
+    <tr><td>Pregnancy registered by 12 weeks</td><td>₹2,000</td></tr>
+    <tr><td>Nutrition kit after month 3</td><td>₹2,000 kit</td></tr>
+    <tr><td>After month 4</td><td>₹2,000</td></tr>
+    <tr><td>Second nutrition kit</td><td>₹2,000 kit</td></tr>
+    <tr><td>After delivery</td><td>₹4,000</td></tr>
+    <tr><td>Baby’s 3rd OPV/Rota/Penta + 2 IPV doses</td><td>₹4,000</td></tr>
+    <tr><td>Baby’s MR vaccine (9–12 months)</td><td>₹2,000</td></tr></table>
+   <div class="verdict">Honest read: the scheme targets poor families and is applied through the village/urban health nurse and PHC. A salaried IT household is very unlikely to qualify. Ask the UHN once — don’t plan money around it.</div></div>
+
+  <div class="card scheme"><div class="hd"><h3>PMMVY (central scheme)</h3><span class="tag">Conditional</span></div>
+   <dl><dt>What</dt><dd>₹5,000 for the first child in two instalments; ₹6,000 for a second child only if she is a girl. Apply up to 270 days after birth.</dd>
+   <dt>Not eligible</dt><dd>Women in regular central/state government or PSU jobs, and those already receiving similar benefits under any law.</dd></dl>
+   <div class="verdict">If she is a salaried employee getting paid maternity leave, she likely falls under the “similar benefits under law” exclusion. In Tamil Nadu it is run together with the Muthulakshmi Reddy scheme.</div>
+   <a class="btn ghost sm" style="margin-top:10px" href="https://pmmvy.wcd.gov.in/" target="_blank" rel="noopener">Open PMMVY</a></div>
+
+  <div class="card scheme"><div class="hd"><h3>Free care at government hospitals</h3><span class="tag now">Everyone</span></div>
+   <dl><dt>JSSK</dt><dd>Free delivery (normal and C-section), medicines, tests, food and transport at government facilities, plus free care for sick newborns.</dd>
+   <dt>PMSMA</dt><dd>Free check-up by a specialist on the 9th of every month at government health facilities, for second- and third-trimester pregnancies.</dd></dl>
+   <div class="verdict">Useful as a free second opinion even if you deliver privately.</div></div>
+
+  <div class="card scheme"><div class="hd"><h3>Maternity leave (if she is employed)</h3><span class="tag now">Law</span></div>
+   <dl><dt>Entitlement</dt><dd>26 weeks fully paid for the first two children; up to 8 of those weeks can be taken before the due date. Now under the Code on Social Security, 2020 (in force since 21 Nov 2025), which replaced the Maternity Benefit Act.</dd>
+   <dt>Qualifying</dt><dd>At least 80 days actually worked in the 12 months before the expected delivery date.</dd>
+   <dt>Also</dt><dd>No dismissal during maternity leave; crèche required where there are 50+ employees; work-from-home afterwards if the role allows and the employer agrees.</dd></dl></div>
+
+  <div class="card scheme"><div class="hd"><h3>Paternity leave</h3><span class="tag">Policy</span></div>
+   <dl><dd>No law requires it in the private sector — it is whatever your company’s policy says. Check Orion’s HR policy now and block the dates.</dd></dl></div>
+
+  <div class="card scheme"><div class="hd"><h3>After birth: paperwork</h3></div>
+   <ul class="b" style="margin-top:8px">
+    <li><b>Birth certificate</b> — hospital reports the birth. Collect the certificate; register within 21 days to avoid late fees. Name can be added later.</li>
+    <li><b>Baal Aadhaar</b> — at any Aadhaar centre with the birth certificate and a parent’s Aadhaar.</li>
+    <li><b>Health insurance</b> — add the baby within your policy’s window (often 30 days).</li>
+    <li><b>U-WIN</b> — digital vaccination record at uwin.mohfw.gov.in.</li>
+    <li><b>ABHA</b> — optional digital health ID for mother and baby.</li>
+    <li><b>Nominee updates</b> — PF, insurance and bank nominees, if you want the child added.</li></ul></div>`;
+}
+function sBag(){
+  let total=0,done=0;
+  const h=Object.entries(BAG).map(([g,items])=>`<div class="card"><h2>${g}</h2>${items.map(it=>{const k=g+"|"+it;total++;if(S.bag[k])done++;return `<label class="task ${S.bag[k]?"done":""}"><input type="checkbox" class="chk" data-c="bag" data-v="${esc(k)}" ${S.bag[k]?"checked":""}><div class="t" style="margin-top:2px">${esc(it)}</div></label>`}).join("")}</div>`).join("");
+  return `<h1>Hospital bag</h1><div class="card"><div class="row between"><b>${done} of ${total} packed</b></div><div class="bar" style="margin-top:8px"><i style="width:${done/total*100}%"></i></div></div>${h}
+   <div class="card flat small">Pack by 34–36 weeks. Many hospitals give a list too — check theirs and add anything missing here as a custom task.</div>`;
+}
+function sFood(){
+  return `<h1>Food guide</h1>
+  <div class="card"><h2>Eat more</h2><ul class="b">
+   <li>Iron: ragi, keerai (spinach, murungai keerai), dates, jaggery, dal, eggs, chicken, mutton liver in moderation.</li>
+   <li>Protein at every meal: dal, sundal, paneer, curd, eggs, fish, chicken.</li>
+   <li>Calcium: milk, curd, buttermilk, ragi, sesame (ellu).</li>
+   <li>Fibre for constipation: fruit, vegetables, whole grains, plenty of water.</li>
+   <li>Small fish like sardine (mathi) and Indian mackerel (ayala) — omega-3, low mercury.</li></ul></div>
+  <div class="card"><h2>Limit</h2><ul class="b">
+   <li>Caffeine under about 200 mg a day — roughly two small cups of filter coffee, counting tea and cola.</li>
+   <li>Sugar and fried snacks, especially if the OGTT is borderline.</li>
+   <li>Extra calories: none needed in the first trimester; about 350 more a day in the second and 450 in the third — that’s a snack, not “eating for two”.</li></ul></div>
+  <div class="card warn"><h2>Avoid</h2><ul class="b">
+   <li>Alcohol, in any amount.</li>
+   <li>Raw or undercooked meat, eggs and seafood.</li>
+   <li>Unpasteurised milk and cheese made from it.</li>
+   <li>Large predatory fish: shark, swordfish, king mackerel (high mercury).</li>
+   <li>Raw or unripe papaya (the latex can trigger contractions). Ripe papaya in normal amounts is generally considered fine.</li>
+   <li>Street food with uncertain water or hygiene — typhoid and hepatitis A are real risks.</li>
+   <li>Herbal remedies and “heat/cold” home medicines without asking the doctor.</li></ul></div>`;
+}
+function sVax(){
+  const b=babyAge();
+  let h=`<h1>Baby vaccines</h1>`;
+  if(!b)h+=`<div class="card flat small">Add the baby’s birth date in <button class="link" data-a="go" data-v="profile">Details</button> and the due date for each vaccine will appear here.</div>`;
+  h+=`<div class="card">${VAX.map(v=>{let due="";if(b){const d=v.mo!=null?addM(b.dob,v.mo):addD(b.dob,v.d);const late=!S.vax[v.k]&&d<today();due=`<div class="small ${late?"bad":"muted"}">${late?"Due since ":"Due "}${fmt(d)}</div>`}
+    return `<label class="task ${S.vax[v.k]?"done":""}"><input type="checkbox" class="chk" data-c="vax" data-v="${v.k}" ${S.vax[v.k]?"checked":""}><div><div class="t">${v.age}</div><div class="d">${v.list}</div>${due}</div></label>`}).join("")}</div>
+   <div class="card flat small">This is the government (Universal Immunisation Programme) schedule — free at government centres. Private paediatricians usually follow the IAP schedule, which adds vaccines such as influenza, MMR, chickenpox, hepatitis A and typhoid. Ask yours for their chart and follow it.</div>`;
+  return h;
+}
+function sWarn(){return `<h1>Warning signs</h1>${warnBody()}`}
+function warnBody(){
+  const P=S.profile;
+  return `<div class="card warn"><h2>Go to hospital now</h2><ul class="b">
+   <li>Vaginal bleeding — more than light spotting</li><li>Fluid leaking or gushing (waters breaking)</li>
+   <li>Severe or constant belly pain</li><li>Severe headache, blurred vision, or sudden swelling of face and hands</li>
+   <li>Fits, fainting, or trouble breathing</li><li>Baby moving less than usual (after 28 weeks)</li>
+   <li>Regular contractions before 37 weeks</li></ul></div>
+  <div class="card"><h2>Call the doctor today</h2><ul class="b">
+   <li>Fever of 38°C or higher</li><li>Burning or pain while passing urine</li><li>Vomiting so much she can’t keep fluids down</li>
+   <li>BP 140/90 or higher</li><li>Severe itching, especially palms and soles, in late pregnancy</li><li>Low mood or anxiety most days for 2+ weeks</li></ul></div>
+  <div class="grid2" style="margin-top:14px">
+   <a class="btn lotus" href="tel:108">Call 108 ambulance</a>
+   ${P.doctorPhone?`<a class="btn" href="tel:${esc(P.doctorPhone)}">Call ${esc(P.doctor||"doctor")}</a>`:`<button class="btn ghost" data-a="go" data-v="profile">Add doctor’s number</button>`}
+   ${P.hospitalPhone?`<a class="btn ghost" href="tel:${esc(P.hospitalPhone)}">Call ${esc(P.hospital||"hospital")}</a>`:""}
+   <a class="btn ghost" href="tel:102">Call 102 (mother & child)</a></div>`;
+}
+function sProfile(){
+  const P=S.profile;
+  const f=(id,l,type="text",note="",extra="")=>`<label class="field"><span>${l}</span><input type="${type}" id="p_${id}" value="${esc(P[id]||"")}" ${extra}>${note?`<em>${note}</em>`:""}</label>`;
+  let used=0;try{used=new Blob([localStorage.getItem(KEY)||""]).size}catch(e){}
+  return `<h1>Details & backup</h1>
+  <div class="card"><h2>Dates</h2>
+   ${f("edd","Due date","date","From the doctor or scan. If set, this wins over the period date.")}
+   ${f("lmp","First day of last period","date")}
+   ${f("dob","Baby’s birth date","date","Fill in after the birth — switches the app to baby mode.")}</div>
+  <div class="card"><h2>People</h2>${f("mom","Mother’s name")}${f("dad","Father’s name")}${f("blood","Mother’s blood group","text","","placeholder='e.g. B+'")}</div>
+  <div class="card"><h2>For the weight range</h2>${f("height","Height (cm)","number","","inputmode='decimal'")}${f("preWeight","Weight before pregnancy (kg)","number","","inputmode='decimal' step='0.1'")}</div>
+  <div class="card"><h2>Care team</h2>${f("doctor","Doctor’s name")}${f("doctorPhone","Doctor’s phone","tel")}${f("hospital","Hospital")}${f("hospitalPhone","Hospital phone / labour ward","tel")}${f("paed","Paediatrician")}</div>
+  <div class="card"><h2>Numbers</h2>${f("picme","PICME / RCH number")}${f("insurer","Insurer and TPA")}${f("policy","Policy / employee ID")}</div>
+  <button class="btn block" style="margin-top:14px" data-a="profileSave">Save details</button>
+  <div class="card"><h2>Backup</h2>
+   <p class="small">Data lives only in this browser on this phone (${(used/1024).toFixed(0)} KB used). Export regularly and keep the file in Google Drive or send it to yourself. Import it on another phone to share or move.</p>
+   <div class="grid2" style="margin-top:12px"><button class="btn" data-a="export">Export backup</button><button class="btn ghost" data-a="import">Import backup</button></div>
+   ${S.lastBackup?`<p class="small muted" style="margin-top:8px">Last export: ${fmt(parse(S.lastBackup))}</p>`:""}</div>
+  <div class="card"><h2>Reset</h2><p class="small muted">Deletes everything on this phone. Export first.</p><button class="btn danger sm" style="margin-top:10px" data-a="reset">Delete all data</button></div>
+  <p class="small muted" style="margin-top:14px">General information, not medical advice. Your doctor’s instructions come first.</p>`;
+}
+
+/* ================= SHEETS ================= */
+function journalSheet(j){
+  U.draft={id:j?j.id:null,mood:j?j.mood:"",tags:new Set(j?j.tags:[]),photo:j?j.photo:null};
+  const P=PROMPTS[Math.floor(today()/DAY)%PROMPTS.length];
+  openSheet(`<h2>${j?"Edit entry":"New entry"}</h2>
+   <label class="field"><span>Date</span><input type="date" id="jDate" value="${j?j.date:iso(today())}"></label>
+   <div class="field"><span>Mood</span><div class="moods">${MOODS.map(m=>`<button data-a="mood" data-v="${m}" class="${U.draft.mood===m?"on":""}">${m}</button>`).join("")}</div></div>
+   <div class="field"><span>How it felt</span><div>${TAGS.map(t=>`<button class="toggle ${U.draft.tags.has(t)?"on":""}" data-a="jtag" data-v="${t}">${t}</button>`).join("")}</div></div>
+   <label class="field"><span>Notes</span><textarea id="jText" placeholder="${P}">${esc(j?j.text:"")}</textarea></label>
+   <div class="field"><span>Photo</span><div id="jPhotoBox">${U.draft.photo?`<img src="${U.draft.photo}" style="width:100%;border-radius:14px" alt="">`:""}</div>
+    <div class="row" style="margin-top:8px"><label class="btn ghost sm">${U.draft.photo?"Replace photo":"Add bump or scan photo"}<input type="file" accept="image/*" id="jPhoto" hidden></label>${U.draft.photo?'<button class="link" data-a="jPhotoDel">Remove</button>':""}</div>
+    <em style="display:block;font-size:13px;color:var(--muted);margin-top:4px">Photos are shrunk to save space.</em></div>
+   <div class="actions">${j?`<button class="btn danger" data-a="journalDel">Delete</button>`:`<button class="btn ghost" data-a="close">Cancel</button>`}<button class="btn" data-a="journalSave">Save entry</button></div>`);
+}
+function apptSheet(a){
+  openSheet(`<h2>${a?"Edit appointment":"New appointment"}</h2>
+   <label class="field"><span>What</span><input type="text" id="aTitle" value="${esc(a?a.title:"")}" placeholder="e.g. Anomaly scan" list="apptSug"></label>
+   <datalist id="apptSug"><option>Gynaecologist check-up</option><option>Dating scan</option><option>NT scan</option><option>Anomaly scan</option><option>Growth scan</option><option>Blood tests</option><option>OGTT</option><option>Td vaccine</option><option>NST</option></datalist>
+   <div class="row" style="gap:10px"><label class="field" style="flex:1"><span>Date</span><input type="date" id="aDate" value="${a?a.date:iso(today())}"></label><label class="field" style="flex:1"><span>Time</span><input type="time" id="aTime" value="${a?a.time:""}"></label></div>
+   <label class="field"><span>Where</span><input type="text" id="aWhere" value="${esc(a?a.where:S.profile.hospital||"")}"></label>
+   <label class="field"><span>Questions to ask</span><textarea id="aQ" style="min-height:90px">${esc(a?a.q:"")}</textarea></label>
+   <label class="field"><span>Notes after the visit</span><textarea id="aNotes" style="min-height:90px" placeholder="What the doctor said, next steps, weight, BP">${esc(a?a.notes:"")}</textarea></label>
+   <div class="actions">${a?`<button class="btn danger" data-a="apptDel" data-v="${a.id}">Delete</button>`:`<button class="btn ghost" data-a="close">Cancel</button>`}<button class="btn" data-a="apptSave" data-v="${a?a.id:""}">Save appointment</button></div>`);
+}
+function customSheet(m){
+  openSheet(`<h2>Add your own task</h2>
+   <label class="field"><span>Task</span><input type="text" id="cT" placeholder="e.g. Buy maternity pillow"></label>
+   <label class="field"><span>Details (optional)</span><input type="text" id="cD"></label>
+   <label class="field"><span>When</span><select id="cM">${MONTHS.map(x=>`<option value="${x.id}" ${x.id===m?"selected":""}>${x.name}</option>`).join("")}</select></label>
+   <div class="actions"><button class="btn ghost" data-a="close">Cancel</button><button class="btn" data-a="customSave">Add task</button></div>`);
+}
+
+/* ================= ACTIONS ================= */
+const A={
+  tab(el){U.tab=el.dataset.v;U.sub=null;render(true)},
+  go(el){closeSheet();U.tab="more";U.sub=el.dataset.v;render(true)},
+  back(){U.sub=null;render(true)},
+  close(){closeSheet()},
+  month(el){U.month=el.dataset.v;render()},
+  filter(el){U.filter=el.dataset.v;render()},
+  sos(){openSheet(`<h2>Emergency</h2>${warnBody()}<div class="actions"><button class="btn ghost" data-a="close">Close</button></div>`)},
+  welcomeSave(){
+    const edd=val("w_edd"),lmp=val("w_lmp");
+    if(!edd&&!lmp){toast("Enter the due date or the period date.");return}
+    if(edd)S.profile.edd=edd;
+    if(lmp){S.profile.lmp=lmp;if(!edd)S.profile.edd=iso(addD(parse(lmp),280))}
+    const p=preg();if(p.days<0||p.days>301){toast("That date doesn’t look right — please check it.");delete S.profile.edd;delete S.profile.lmp;return}
+    if(val("w_mom"))S.profile.mom=val("w_mom");
+    save();render(true);toast("You’re all set.");
+  },
+  journalNew(){journalSheet(null)},
+  journalEdit(el){journalSheet(S.journal.find(j=>j.id===el.dataset.v))},
+  mood(el){U.draft.mood=U.draft.mood===el.dataset.v?"":el.dataset.v;el.parentNode.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.v===U.draft.mood))},
+  jtag(el){const t=el.dataset.v;U.draft.tags.has(t)?U.draft.tags.delete(t):U.draft.tags.add(t);el.classList.toggle("on")},
+  jPhotoDel(){U.draft.photo=null;$("#jPhotoBox").innerHTML="";toast("Photo removed")},
+  journalSave(){
+    const d=U.draft,text=val("jText");
+    if(!text&&!d.mood&&!d.tags.size&&!d.photo){toast("Add a note, mood or photo first.");return}
+    const e={id:d.id||uid(),date:val("jDate")||iso(today()),mood:d.mood,tags:[...d.tags],text,photo:d.photo};
+    const i=S.journal.findIndex(j=>j.id===e.id);
+    const prev=i>=0?S.journal[i]:null;
+    if(i>=0)S.journal[i]=e;else S.journal.push(e);
+    if(!save()){if(i>=0)S.journal[i]=prev;else S.journal.pop();return}
+    closeSheet();U.tab="journal";U.sub=null;render(true);toast("Entry saved");
+  },
+  journalDel(){if(!confirm("Delete this entry?"))return;S.journal=S.journal.filter(j=>j.id!==U.draft.id);save();closeSheet();render();toast("Entry deleted")},
+  apptNew(){apptSheet(null)},
+  apptEdit(el){apptSheet(S.appts.find(a=>a.id===el.dataset.v))},
+  apptSave(el){
+    const title=val("aTitle"),date=val("aDate");if(!title||!date){toast("Add what it is and the date.");return}
+    const a={id:el.dataset.v||uid(),title,date,time:val("aTime"),where:val("aWhere"),q:val("aQ"),notes:val("aNotes")};
+    const i=S.appts.findIndex(x=>x.id===a.id);if(i>=0)S.appts[i]=a;else S.appts.push(a);
+    save();closeSheet();render();toast("Appointment saved");
+  },
+  apptDel(el){if(!confirm("Delete this appointment?"))return;S.appts=S.appts.filter(a=>a.id!==el.dataset.v);save();closeSheet();render();toast("Appointment deleted")},
+  customNew(el){customSheet(el.dataset.v)},
+  customSave(){const t=val("cT");if(!t){toast("Write the task first.");return}S.custom.push({id:"c_"+uid(),m:val("cM"),t,d:val("cD")});save();closeSheet();render();toast("Task added")},
+  delCustom(el,e){e.preventDefault();if(!confirm("Delete this task?"))return;S.custom=S.custom.filter(c=>c.id!==el.dataset.v);delete S.tasks[el.dataset.v];save();render()},
+  medAdd(){const v=val("medNew");if(!v)return;if(!S.meds.list.includes(v))S.meds.list.push(v);save();render()},
+  medDel(el){S.meds.list.splice(+el.dataset.v,1);save();render()},
+  wAdd(){const kg=parseFloat(val("wKg"));if(!kg||kg<30||kg>200){toast("Enter weight in kg.");return}S.weights.push({id:uid(),date:val("wDate")||iso(today()),kg:Math.round(kg*10)/10});save();render();toast("Weight saved")},
+  wDel(el){S.weights=S.weights.filter(w=>w.id!==el.dataset.v);save();render()},
+  bAdd(){const s=parseInt(val("bSys")),d=parseInt(val("bDia"));if(!s||!d||s<60||s>250||d<30||d>160){toast("Enter both numbers, e.g. 118 and 76.");return}
+    S.bp.push({id:uid(),date:val("bDate")||iso(today()),sys:s,dia:d});save();render();const f=bpFlag(s,d);toast(f[1])},
+  bDel(el){S.bp=S.bp.filter(b=>b.id!==el.dataset.v);save();render()},
+  kickStart(){S.kickLive={start:Date.now(),count:0};save();render()},
+  kick(){S.kickLive.count++;save();if(navigator.vibrate)navigator.vibrate(30);render();if(S.kickLive.count===10)toast("10 movements — well done, little one.")},
+  kickUndo(){if(S.kickLive.count>0)S.kickLive.count--;save();render()},
+  kickStop(){const L=S.kickLive;if(L.count>0)S.kicks.push({start:L.start,end:Date.now(),count:L.count});S.kickLive=null;save();render();toast("Session saved")},
+  contr(){const C=S.contr;if(C.length&&!C[C.length-1].e)C[C.length-1].e=Date.now();else C.push({s:Date.now(),e:null});if(C.length>60)C.splice(0,C.length-60);save();if(navigator.vibrate)navigator.vibrate(40);render()},
+  contrClear(){if(!confirm("Clear all timed contractions?"))return;S.contr=[];save();render()},
+  profileSave(){
+    const ids=["edd","lmp","dob","mom","dad","blood","height","preWeight","doctor","doctorPhone","hospital","hospitalPhone","paed","picme","insurer","policy"];
+    const oldEdd=S.profile.edd,oldLmp=S.profile.lmp;
+    ids.forEach(k=>{const v=val("p_"+k);if(v)S.profile[k]=v;else delete S.profile[k]});
+    if(S.profile.lmp&&S.profile.lmp!==oldLmp&&S.profile.edd===oldEdd)S.profile.edd=iso(addD(parse(S.profile.lmp),280));
+    save();render();toast("Details saved");
+  },
+  export(){
+    const name=`thottil-backup-${iso(today())}.json`;
+    const blob=new Blob([JSON.stringify(S)],{type:"application/json"});
+    const done=()=>{S.lastBackup=iso(today());save();render()};
+    const dl=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);done();toast("Backup downloaded")};
+    try{const file=new File([blob],name,{type:"application/json"});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:"Thottil backup"}).then(()=>{done();toast("Backup shared")}).catch(err=>{if(err&&err.name!=="AbortError")dl()});return}}catch(e){}
+    dl();
+  },
+  import(){$("#importFile").click()},
+  reset(){if(!confirm("Delete ALL data on this phone? This cannot be undone."))return;if(!confirm("Last check — have you exported a backup?"))return;S=clone(DEF);save();U.sub=null;U.tab="home";render(true);toast("All data deleted")}
+};
+
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-a]");if(!el)return;
+  const f=A[el.dataset.a];if(f){if(el.tagName==="BUTTON")e.preventDefault();f(el,e)}
+});
+document.addEventListener("change",async e=>{
+  const el=e.target;
+  if(el.dataset&&el.dataset.c){
+    const k=el.dataset.v;
+    if(el.dataset.c==="task"){if(el.checked)S.tasks[k]=iso(today());else delete S.tasks[k]}
+    else if(el.dataset.c==="med"){const t=iso(today());const l=S.meds.log[t]=S.meds.log[t]||[];if(el.checked){if(!l.includes(k))l.push(k)}else S.meds.log[t]=l.filter(x=>x!==k)}
+    else if(el.dataset.c==="bag"){if(el.checked)S.bag[k]=1;else delete S.bag[k]}
+    else if(el.dataset.c==="vax"){if(el.checked)S.vax[k]=iso(today());else delete S.vax[k]}
+    save();
+    if(el.dataset.c==="task"&&el.checked&&navigator.vibrate)navigator.vibrate(20);
+    setTimeout(render,el.checked?250:0);
+    return;
+  }
+  if(el.id==="jPhoto"&&el.files[0]){
+    try{U.draft.photo=await compress(el.files[0]);$("#jPhotoBox").innerHTML=`<img src="${U.draft.photo}" style="width:100%;border-radius:14px" alt="">`}
+    catch(err){toast("Couldn’t read that photo. Try a JPG or PNG.")}
+  }
+  if(el.id==="importFile"&&el.files[0]){
+    try{const data=JSON.parse(await el.files[0].text());
+      if(typeof data!=="object"||!data||!("profile"in data)){toast("That file isn’t a Thottil backup.");return}
+      if(!confirm("Replace the data on this phone with this backup?"))return;
+      S=Object.assign(clone(DEF),data);save();U.tab="home";U.sub=null;render(true);toast("Backup restored")}
+    catch(err){toast("Couldn’t read that file.")}
+    el.value="";
+  }
+});
+function compress(file){return new Promise((res,rej)=>{const img=new Image();const url=URL.createObjectURL(file);
+  img.onload=()=>{const max=720,s=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res(c.toDataURL("image/jpeg",.7))};
+  img.onerror=()=>{URL.revokeObjectURL(url);rej()};img.src=url})}
+
+$("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+window.addEventListener("scroll",()=>$("#top").classList.toggle("scrolled",scrollY>4),{passive:true});
+// refresh live timers & day rollover
+setInterval(()=>{if(!$("#sheet").classList.contains("open")&&U.tab==="more"&&(U.sub==="kicks"||U.sub==="contr"))render()},30000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&!$("#sheet").classList.contains("open"))render()});
+
+if("serviceWorker"in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
+render(true);
+</script>
+</body>
+</html>
